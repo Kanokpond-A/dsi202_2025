@@ -2,7 +2,7 @@
 # setup
 
 ```sh
-jaaaaa
+กิทขึ้นยัง
 ```
 
 # create an app
