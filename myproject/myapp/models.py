@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 class Tree(models.Model):
     name = models.CharField(max_length=255)
-    species = models.CharField(max_length=255)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
     preferred_area = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to='trees/', blank=True, null=True)

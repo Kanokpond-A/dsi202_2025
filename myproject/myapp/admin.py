@@ -3,7 +3,7 @@ from .models import Tree, PlantingPlan, Equipment, Purchase
 
 @admin.register(Tree)
 class TreeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'species', 'preferred_area')
+    list_display = ('name', 'price', 'preferred_area')
 
 @admin.register(PlantingPlan)
 class PlantingPlanAdmin(admin.ModelAdmin):
