@@ -1,26 +1,23 @@
 from django.db import models
-
-# Create your models here.
-from django.db import models
 from django.contrib.auth.models import User
 
 class Tree(models.Model):
     name = models.CharField(max_length=255)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    image_url = models.URLField()
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    image_url = models.URLField(blank=True, null=True)
     description = models.TextField()
 
     def __str__(self):
         return self.name
 
 class Equipment(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=200)
     price = models.FloatField()
-    image_url = models.URLField(blank=True)
+    image_url = models.URLField(blank=True, null=True)
 
     def __str__(self):
         return self.name
-    
+
 class PlantingLocation(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField(blank=True)
@@ -47,14 +44,6 @@ class Notification(models.Model):
 
     def __str__(self):
         return f"Notification for {self.user.username} on {self.notification_date.date()}"
-
-class Equipment(models.Model):
-    name = models.CharField(max_length=200)
-    price = models.FloatField()
-    image_url = models.URLField(blank=True, null=True)
-
-    def __str__(self):
-        return self.name
 
 class Purchase(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
