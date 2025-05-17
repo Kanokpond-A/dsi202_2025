@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cart | PLOOKJING</title>
+  <style>
+    body { background: #0D3F31; color: white; font-family: 'Prompt', sans-serif; }
+    .title { color: #FFA552; font-size: 2.2rem; margin: 1rem; }
+    .cart-box { background: white; color: black; padding: 1rem; border-radius: 12px; margin: 2rem; }
+    .cart-item { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+    .cart-item img { width: 100px; height: 100px; object-fit: cover; border-radius: 10px; }
+    .btn-purchase {
+      display: inline-block;
+      background: #FFA552;
+      padding: 1rem 2rem;
+      border-radius: 30px;
+      font-weight: bold;
+      color: white;
+      text-decoration: none;
+      float: right;
+    }
+  </style>
+</head>
+<body>
+  <div class="title">🛒 CART</div>
+  <div class="cart-box">
+    {% for item in items %}
+    <div class="cart-item">
+      <img src="{{ item.image_url }}" alt="{{ item.name }}">
+      <div>
+        <div><strong>{{ item.name }}</strong></div>
+        <div>Amount: {{ item.quantity }}</div>
+        <div>Price: {{ item.price }} x {{ item.quantity }}</div>
+      </div>
+    </div>
+    {% empty %}
+    <p>No items in cart.</p>
+    {% endfor %}
+
+    <h3>Total: {{ total }}</h3>
+    <a href="{% url 'order' %}" class="btn-purchase">PURCHASE</a>
+  </div>
+</body>
+</html>

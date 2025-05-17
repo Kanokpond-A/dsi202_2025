@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Order | PLOOKJING</title>
+  <style>
+    body { background: #0D3F31; color: white; font-family: 'Prompt', sans-serif; }
+    .order-box { background: white; color: black; margin: 2rem; padding: 2rem; border-radius: 20px; }
+    .order-img { width: 150px; height: 150px; object-fit: cover; border-radius: 10px; }
+    .btn-confirm {
+      background: #FFA552;
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 20px;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h2 style="color:#FFA552; margin: 1rem;">📦 ORDER</h2>
+  <div class="order-box">
+    {% for item in items %}
+    <div style="display:flex; gap:2rem; align-items:center;">
+      <img class="order-img" src="{{ item.image_url }}">
+      <div>
+        <p>Tree: {{ item.name }}</p>
+        <p>Amount: {{ item.quantity }}</p>
+        <p>Price: {{ item.price }}</p>
+        <p>Location: กรอกจ้า</p>
+      </div>
+    </div>
+    {% endfor %}
+    <form method="post">
+      {% csrf_token %}
+      <button class="btn-confirm" type="submit">Confirm Order</button>
+    </form>
+  </div>
+</body>
+</html>
