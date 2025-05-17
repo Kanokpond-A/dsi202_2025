@@ -5,7 +5,8 @@ def getstart(request):
     return render(request, 'getstarted.html')
 
 def home(request):
-    return render(request, 'home.html')
+    trees = Tree.objects.all()[:3]  # แนะนำ 3 ต้นไม้
+    return render(request, 'home.html', {'trees': trees})
 
 def tree_list(request):
     return render(request, 'tree_list.html')
