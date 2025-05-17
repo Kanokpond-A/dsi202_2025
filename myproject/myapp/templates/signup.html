@@ -1,0 +1,11 @@
+<h1>SIGN UP</h1>
+<form method="post">
+  {% csrf_token %}
+  {{ form.email.label }}<br>
+  {{ form.email }}<br>
+  {{ form.password1.label }}<br>
+  {{ form.password1 }}<br>
+  {{ form.address.label }}<br>
+  {{ form.address }}<br><br>
+  <button type="submit">Sign up</button>
+</form>

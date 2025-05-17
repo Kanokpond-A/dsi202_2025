@@ -1,0 +1,11 @@
+<h2>🔔 Notification</h2>
+
+{% for n in notifications %}
+  <div style="background:white; color:black; margin:1rem; padding:1rem; border-radius:12px;">
+    <strong>Hello!</strong><br>
+    {{ n.message }}<br>
+    <small>{{ n.notification_date|date:"d M Y" }} – {{ n.notification_date|time:"H:i" }}</small>
+  </div>
+{% empty %}
+  <p>No notifications yet.</p>
+{% endfor %}

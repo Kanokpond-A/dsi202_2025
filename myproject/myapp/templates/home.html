@@ -1,247 +1,280 @@
 <!DOCTYPE html>
 <html lang="en">
+<!-- Font Awesome CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Home | PLOOKJING</title>
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: 'Prompt', sans-serif;
-      background-color: #fff;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home | PLOOKJING</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
-    /* HERO SECTION - now half screen height */
-    .hero {
-      background: url("/static/images/photo-1612819386413-1ab650e32510.avif") no-repeat center center/cover;
-      height: 50vh;
-      position: relative;
-      color: white;
-    }
+        body {
+            margin: 0;
+            font-family: 'Prompt', sans-serif;
+            background-color: #fff;
+        }
 
-    .navbar {
-      display: flex;
-      justify-content: space-between;
-      padding: 1.2rem 2rem;
-      align-items: center;
-    }
+        /* HERO SECTION - now half screen height */
+        .hero {
+            background: url("static/images/raissa-lara-lutolf-fasel-NkR6ad5unmM-unsplash.jpg") no-repeat center center/cover;
+            height: 50vh;
+            position: relative;
+            color: white;
+        }
 
-    .navbar a {
-      color: white;
-      text-decoration: none;
-      margin: 0 1rem;
-      font-weight: 500;
-    }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            padding: 1.2rem 2rem;
+            align-items: center;
+        }
 
-    .right-icons {
-      font-size: 1.5rem;
-    }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin: 0 1rem;
+            font-weight: 500;
+        }
 
-    .hero-content {
-      position: absolute;
-      bottom: 2rem;
-      left: 50%;
-      transform: translateX(-50%);
-      text-align: center;
-    }
+        /* .right-icons {
+            font-size: 1.5rem;
+        } */
 
-    .hero-content h1 {
-      font-size: 1.6rem;
-      margin-bottom: 1.5rem;
-      font-weight: bold;
-    }
+        i.fa-solid {
+            font-size: 24px;
+            color: white;
+            margin: 0 0.5rem;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
 
-    .hero-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-      flex-wrap: wrap;
-    }
+        i.fa-solid:hover {
+            transform: scale(1.2);
+            color: #ffc107;
+            /* ตัวอย่างสี hover */
+        }
 
-    .hero-btn {
-      background: white;
-      color: #165a26;
-      padding: 1rem 1.8rem;
-      font-weight: bold;
-      border-radius: 20px;
-      text-decoration: none;
-      font-size: 1rem;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-    }
 
-    /* WELCOME SECTION */
-    .welcome-section {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-wrap: wrap;
-      padding: 3rem 2rem;
-      text-align: center;
-    }
+        .hero-content {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+        }
 
-    .welcome-left {
-      font-size: 1.4rem;
-      color: #165a26;
-      font-weight: bold;
-    }
+        .hero-content h1 {
+            font-size: 1.6rem;
+            margin-bottom: 1.5rem;
+            font-weight: bold;
+        }
 
-    .welcome-steps {
-      max-width: 320px;
-      font-size: 0.95rem;
-      text-align: left;
-      margin-top: 1rem;
-      line-height: 1.6;
-    }
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
 
-    .button-section {
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-      margin: 2rem auto;
-      flex-wrap: wrap;
-    }
+        .hero-btn {
+            background: white;
+            color: #165a26;
+            padding: 1rem 1.8rem;
+            font-weight: bold;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 1rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
 
-    .btn {
-      background-color: #FFA552;
-      color: white;
-      padding: 1rem 2rem;
-      font-weight: bold;
-      font-size: 1rem;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      text-decoration: none;
-    }
+        /* WELCOME SECTION */
+        .welcome-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
 
-    @media (max-width: 768px) {
-      .hero-content h1 {
-        font-size: 1.2rem;
-      }
+        .welcome-left {
+            font-size: 1.4rem;
+            color: #165a26;
+            font-weight: bold;
+        }
 
-      .hero-btn {
-        padding: 0.8rem 1.5rem;
-      }
+        .welcome-steps {
+            max-width: 320px;
+            font-size: 0.95rem;
+            text-align: left;
+            margin-top: 1rem;
+            line-height: 1.6;
+        }
 
-      .welcome-section {
-        flex-direction: column;
-        text-align: center;
-      }
+        .button-section {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem auto;
+            flex-wrap: wrap;
+        }
 
-      .welcome-steps {
-        text-align: center;
-      }
-    
+        .btn {
+            background-color: #FFA552;
+            color: white;
+            padding: 1rem 2rem;
+            font-weight: bold;
+            font-size: 1rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+        }
 
-    .recommend-section {
-  background-color: #FFA552;
-  padding: 3rem 2rem;
-  border-top-left-radius: 40px;
-  border-top-right-radius: 40px;
-  margin-top: 3rem;
-  text-align: center;
-}
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 1.2rem;
+            }
 
-.recommend-section h2 {
-  color: #165a26;
-  font-size: 1.8rem;
-  margin-bottom: 2rem;
-}
+            .hero-btn {
+                padding: 0.8rem 1.5rem;
+            }
 
-.recommend-cards {
-  display: flex;
-  justify-content: center;
-  gap: 2rem;
-  flex-wrap: wrap;
-}
+            .welcome-section {
+                flex-direction: column;
+                text-align: center;
+            }
 
-.recommend-card {
-  background-color: white;
-  width: 180px;
-  height: auto;
-  border-radius: 20px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  padding: 1rem;
-}
+            .welcome-steps {
+                text-align: center;
+            }
 
-.recommend-card img {
-  width: 100%;
-  height: 120px;
-  object-fit: cover;
-  border-radius: 12px;
-}
 
-.add-cart {
-  margin-top: 0.8rem;
-  font-size: 0.9rem;
-  text-decoration: underline;
-  color: #165a26;
-  display: block;
-}
-    }
+            .recommend-section {
+                background-color: #FFA552;
+                padding: 3rem 2rem;
+                border-top-left-radius: 40px;
+                border-top-right-radius: 40px;
+                margin-top: 3rem;
+                text-align: center;
+            }
 
-  </style>
+            .recommend-section h2 {
+                color: #165a26;
+                font-size: 1.8rem;
+                margin-bottom: 2rem;
+            }
+
+            .recommend-cards {
+                display: flex;
+                justify-content: center;
+                gap: 2rem;
+                flex-wrap: wrap;
+            }
+
+            .recommend-card {
+                background-color: white;
+                width: 180px;
+                height: auto;
+                border-radius: 20px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+                padding: 1rem;
+            }
+
+            .recommend-card img {
+                width: 100%;
+                height: 120px;
+                object-fit: cover;
+                border-radius: 12px;
+            }
+
+            .add-cart {
+                margin-top: 0.8rem;
+                font-size: 0.9rem;
+                text-decoration: underline;
+                color: #165a26;
+                display: block;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-  <!-- HERO SECTION -->
-  <div class="hero">
-    <div class="navbar">
-      <div>
-        <a href="/">Home</a>
-        <a href="/about/">About Us</a>
-        <a href="/trees/">Tree & Equipment</a>
-      </div>
-      <div class="right-icons">🔔 🛒 👤</div>
+    <!-- HERO SECTION -->
+    <div class="hero">
+        <div class="navbar">
+            <div>
+                <a href="/">Home</a>
+                <a href="/about/">About Us</a>
+                <a href="/trees-equipment/">Tree & Equipment</a>
+            </div>
+            <div class="icon-bar">
+                <a href="{% url 'notification' %}" title="Notifications">
+                    <i class="fa-solid fa-bell"></i>
+                </a>
+                <a href="{% url 'cart' %}">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                </a>
+                <a href="#" onclick="toggleProfileMenu()">
+                    <i class="fa-solid fa-user"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="hero-content">
+            <h1>Let's plant trees together for a greener, happier future.</h1>
+            <div class="hero-buttons">
+                <a href="/trees/" class="hero-btn">TREE & EQUIPMENT</a>
+                <a href="/about/" class="hero-btn">ABOUT US</a>
+            </div>
+        </div>
     </div>
 
-    <div class="hero-content">
-      <h1>Let's plant trees together for a greener, happier future.</h1>
-      <div class="hero-buttons">
-        <a href="/trees/" class="hero-btn">TREE & EQUIPMENT</a>
-        <a href="/about/" class="hero-btn">ABOUT US</a>
-      </div>
-    </div>
-  </div>
+    <!-- WELCOME SECTION -->
+    <section class="welcome-section">
+        <div class="welcome-left">
+            🌱<br>WELCOME,<br>PLOOKJINGER
+        </div>
+        <div class="welcome-steps">
+            <ol>
+                <li>Pick a Tree – Select from our tree list.</li>
+                <li>Set Location – Choose where to plant it.</li>
+                <li>Pay Online – Secure payment.</li>
+                <li>Get Notified – Track your tree.</li>
+                <li>Enjoy your green world!</li>
+            </ol>
+        </div>
+    </section>
 
-  <!-- WELCOME SECTION -->
-  <section class="welcome-section">
-    <div class="welcome-left">
-      🌱<br>WELCOME,<br>PLOOKJINGER
+    <!-- SIGN IN / MY TREE -->
+    <div class="button-section">
+        <a href="/login/" class="btn">Sign In</a>
+        <a href="/mytree/" class="btn">My Tree</a>
     </div>
-    <div class="welcome-steps">
-      <ol>
-        <li>Pick a Tree – Select from our tree list.</li>
-        <li>Set Location – Choose where to plant it.</li>
-        <li>Pay Online – Secure payment.</li>
-        <li>Get Notified – Track your tree.</li>
-        <li>Enjoy your green world!</li>
-      </ol>
-    </div>
-  </section>
 
-  <!-- SIGN IN / MY TREE -->
-  <div class="button-section">
-    <a href="/login/" class="btn">Sign In</a>
-    <a href="/mytree/" class="btn">My Tree</a>
-  </div>
-
-  <!-- TREE RECOMMEND SECTION -->
-  <section class="recommend-section">
-  <h2>Tree Recommend</h2>
-  <div class="recommend-cards">
-    {% for tree in trees %}
-    <div class="recommend-card">
-      <img src="{{ tree.image_url }}" alt="{{ tree.name }}">
-      <h4>{{ tree.name }}</h4>
-      <a href="{% url 'tree_detail' tree.id %}" class="add-cart">Add to cart</a>
-    </div>
-    {% empty %}
-    <p>No trees available.</p>
-    {% endfor %}
-  </div>
-</section>
+    <!-- TREE RECOMMEND SECTION -->
+    <section class="recommend-section">
+        <h2>Tree Recommend</h2>
+        <div class="recommend-cards">
+            {% for tree in trees %}
+            <div class="recommend-card">
+                <img src="{{ tree.image_url }}" alt="{{ tree.name }}">
+                <h4>{{ tree.name }}</h4>
+                <a href="{% url 'tree_list' tree.id %}" class="add-cart">Add to cart</a>
+            </div>
+            {% empty %}
+            <p>No trees available.</p>
+            {% endfor %}
+        </div>
+    </section>
 
 </body>
+
 </html>

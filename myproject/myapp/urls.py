@@ -4,11 +4,19 @@ from . import views
 urlpatterns = [
     path('', views.getstart, name='getstarted'),  # หน้าแรก
     path('home/', views.home, name='home'), # หน้า home จริงหลังจากกด Get Started
+    # path('tree/<int:pk>/', views.tree_detail, name='tree_detail'),
     path('about/', views.about, name='about'),    
     path('trees/<int:pk>/', views.tree_list, name='tree_list'),
     path('trees-equipment/', views.tree_equipment_list, name='tree_equipment_list'),
+    path('trees/', views.tree_equipment_list, name='tree_equipment_list'),
     path('cart/', views.cart, name='cart'),
-path('add-to-cart/<str:item_type>/<int:item_id>/', views.add_to_cart, name='add_to_cart'),
-path('order/', views.order, name='order'),
+    path('add-to-cart/<str:item_type>/<int:item_id>/', views.add_to_cart, name='add_to_cart'),
+    path('order/', views.order, name='order'),
+    path('login/', views.login_view, name='login'),
+    path('signup/', views.signup_view, name='signup'),
+    path('logout/', views.logout_view, name='logout'),
+    path('notification/', views.notification_list, name='notification'),
+
+
 
 ]
