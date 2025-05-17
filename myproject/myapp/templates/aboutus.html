@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>About Us | PLOOKJING</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Prompt', sans-serif;
+      background-color: #0D3F31;
+      color: white;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      padding: 1.5rem 3rem;
+      align-items: center;
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      margin-right: 1.5rem;
+      font-weight: 500;
+    }
+
+    .navbar .right-icons {
+      font-size: 1.5rem;
+    }
+
+    .content {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      padding: 3rem;
+    }
+
+    .text-box {
+      max-width: 600px;
+      flex: 1;
+      padding-right: 2rem;
+    }
+
+    .text-box h2 {
+      color: #FFA552;
+      font-size: 2.4rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .text-box p {
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+      color: #eeeeee;
+    }
+
+    .image-box {
+      flex: 1;
+      max-width: 420px;
+    }
+
+    .image-box img {
+      width: 100%;
+      border-radius: 20px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .footer {
+      margin-top: 4rem;
+      padding: 2rem 3rem;
+      text-align: left;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      font-size: 0.9rem;
+    }
+
+    .footer span {
+      margin-right: 2rem;
+      display: inline-block;
+    }
+
+    @media (max-width: 768px) {
+      .content {
+        flex-direction: column;
+        padding: 2rem;
+      }
+
+      .text-box {
+        padding-right: 0;
+        text-align: center;
+      }
+
+      .image-box {
+        margin-top: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <div>
+      <a href="/">Home</a>
+      <a href="/about/">About Us</a>
+      <a href="/trees/">Tree & Equipment</a>
+    </div>
+    <div class="right-icons">🔔 🛒 👤</div>
+  </div>
+
+  <div class="content">
+    <div class="text-box">
+      <h2>TRAVEL IS A METHOD OF SELF EXPLORATION</h2>
+      <p>Travel can be a way to cultivate gratitude and appreciation for the world around us. When we see new places and meet new people, we may gain a greater sense of the beauty and diversity of the world. This can help us to develop a deeper sense of gratitude for our own lives and experiences, as well as for the opportunities that travel provides us.</p>
+      <p>Travel can be a powerful method of self-exploration and personal growth, providing us with new perspectives, opportunities for reflection and introspection, and a greater sense of gratitude and appreciation for the world around us.</p>
+    </div>
+    <div class="image-box">
+      <img src="/static/images/georg-eiermann-y1wJs5Ot7Ns-unsplash.jpg" alt="Hoh Rain Forest by Georg Eiermann">
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>📧 hello@reallygreatsite.com</span>
+    <span>📞 +123-456-7890</span>
+    <span>📍 123 Anywhere St., Any City</span>
+  </div>
+
+</body>
+</html>

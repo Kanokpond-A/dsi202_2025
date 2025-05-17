@@ -8,5 +8,8 @@ def home(request):
     trees = Tree.objects.all()[:3]  # แนะนำ 3 ต้นไม้
     return render(request, 'home.html', {'trees': trees})
 
+def about(request):
+    return render(request, 'aboutus.html')
+
 def tree_list(request):
     return render(request, 'tree_list.html')
