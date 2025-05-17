@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Payment</title>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #1c3127;
+      color: white;
+      font-family: 'Prompt', sans-serif;
+      text-align: center;
+      padding: 2rem;
+    }
+    img {
+      max-width: 250px;
+      margin-top: 2rem;
+    }
+    h1 {
+      color: #FFA552;
+    }
+  </style>
+</head>
+<body>
+  <h1>PAYMENT</h1>
+  <img src="{% url 'generate_qr' order.id %}" alt="QR Code" width="250" height="250">
+
+</body>
+</html>

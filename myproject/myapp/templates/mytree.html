@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>My Tree History</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Prompt', sans-serif;
+      background-color: #1e2d26;
+      color: white;
+      margin: 0;
+      padding: 2rem;
+    }
+
+    h1 {
+      color: #FFA552;
+      font-size: 2.4rem;
+      margin-bottom: 2rem;
+    }
+
+    .tree-card {
+      background-color: white;
+      border-radius: 12px;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      color: black;
+    }
+
+    .tree-card img {
+      width: 120px;
+      height: 100px;
+      border-radius: 8px;
+      object-fit: cover;
+      margin-right: 1.5rem;
+    }
+
+    .tree-info {
+      line-height: 1.5;
+    }
+
+    .tree-info span {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 0.3rem;
+    }
+
+    .tree-info small {
+      font-size: 0.85rem;
+      color: #555;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>MY TREE HISTORY</h1>
+
+  {% for order in my_trees %}
+    <div class="tree-card">
+      <img src="{{ order.tree.image_url }}" alt="{{ order.tree.name }}">
+      <div class="tree-info">
+        <span>🌳 {{ order.tree.name }}</span>
+        <span>💰 Price: {{ order.price }} THB</span>
+        <span>🪴 Amount: {{ order.quantity }}</span>
+        <span>📅 Confirmed: {{ order.confirmed_at|date:"d M Y, H:i" }}</span>
+      </div>
+    </div>
+  {% empty %}
+    <p>No tree orders confirmed yet.</p>
+  {% endfor %}
+</body>
+</html>

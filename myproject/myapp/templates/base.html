@@ -1,9 +1,92 @@
-{% if user.is_authenticated %}
-  <div>👤 {{ user.username }}</div>
-  <a href="{% url 'logout' %}">Logout</a>
-{% else %}
-  <a href="{% url 'login' %}">Log in</a>
-  <a href="{% url 'signup' %}">Sign up</a>
-{% endif %}
+<!-- {% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}PLOOKJING{% endblock %}</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Prompt', sans-serif;
+      background-color: #EFFAF3;
+    }
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background-color: #0D3F31;
+      color: white;
+    }
+    .navbar a {
+      color: white;
+      margin-right: 1rem;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .icon-menu {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    #profileMenu {
+      position: absolute;
+      top: 60px;
+      right: 20px;
+      background-color: #5B4332;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      z-index: 100;
+    }
+    #profileMenu a {
+      display: block;
+      margin: 0.5rem 0;
+      color: white;
+      text-decoration: underline;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div>
+      <a href="{% url 'home' %}">Home</a>
+      <a href="{% url 'about' %}">About Us</a>
+      <a href="{% url 'tree_equipment_list' %}">Tree & Equipment</a>
+    </div>
+    <div class="icon-menu">
+      <a href="{% url 'notification' %}"><i class="fa-solid fa-bell"></i></a>
+      <a href="{% url 'cart' %}"><i class="fa-solid fa-cart-shopping"></i></a>
+      <i class="fa-solid fa-user" onclick="toggleProfileMenu()"></i>
+    </div>
+  </nav>
 
-<a href="{% url 'notification' %}" title="Notifications">🔔</a>
+  <div id="profileMenu" class="hidden">
+    {% if user.is_authenticated %}
+      <div>Profile: {{ user.email }}</div>
+      <a href="{% url 'logout' %}">Log out</a>
+      <a href="{% url 'order' %}">My Tree</a>
+    {% else %}
+      <a href="{% url 'signup' %}">Sign up</a>
+      <a href="{% url 'login' %}">Log in</a>
+    {% endif %}
+  </div>
+
+  {% block content %}
+  {% endblock %}
+
+  <script>
+    function toggleProfileMenu() {
+      const menu = document.getElementById("profileMenu");
+      menu.classList.toggle("hidden");
+    }
+  </script>
+</body>
+</html> -->

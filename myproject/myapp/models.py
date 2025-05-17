@@ -50,6 +50,7 @@ class Purchase(models.Model):
     equipment = models.ForeignKey(Equipment, on_delete=models.CASCADE, null=True, blank=True)
     purchase_date = models.DateTimeField(auto_now_add=True)
     quantity = models.PositiveIntegerField()
+    location = models.ForeignKey(PlantingLocation, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return f"{self.user.username} purchased {self.equipment.name} (x{self.quantity})"
@@ -63,3 +64,11 @@ class NewsArticle(models.Model):
 
     def __str__(self):
         return self.title
+    
+class TreeOrder(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    tree = models.ForeignKey(Tree, on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=1)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    confirmed_at = models.DateTimeField(auto_now_add=True)
+

@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+    <!-- Font Awesome CDN -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 <head>
   <meta charset="UTF-8" />
   <title>About Us | PLOOKJING</title>
@@ -27,9 +30,23 @@
       font-weight: 500;
     }
 
-    .navbar .right-icons {
+    /* .navbar .right-icons {
       font-size: 1.5rem;
-    }
+    } */
+
+    i.fa-solid {
+            font-size: 24px;
+            color: white;
+            margin: 0 0.5rem;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        i.fa-solid:hover {
+            transform: scale(1.2);
+            color: #ffc107;
+            /* ตัวอย่างสี hover */
+        }
 
     .content {
       display: flex;
@@ -106,7 +123,17 @@
       <a href="/about/">About Us</a>
       <a href="/trees/">Tree & Equipment</a>
     </div>
-    <div class="right-icons">🔔 🛒 👤</div>
+    <div class="icon-bar">
+                <a href="javascript:void(0);" onclick="toggleNotificationMenu()">
+                    <i class="fa-solid fa-bell"></i>
+                </a>
+                <a href="{% url 'cart' %}">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                </a>
+                <a href="#" onclick="toggleProfileMenu()">
+                    <i class="fa-solid fa-user"></i>
+                </a>
+            </div>
   </div>
 
   <div class="content">
@@ -127,5 +154,49 @@
     <span>📍 123 Anywhere St., Any City</span>
   </div>
 
+  <!-- PROFILE MENU DROPDOWN -->
+    <div id="profileMenu"
+        style="display: none; position: fixed; top: 60px; right: 20px; background: #fff; color: black; padding: 1rem; border-radius: 10px; width: 240px; z-index: 999;">
+        {% if user.is_authenticated %}
+        <div style="margin-bottom: 1rem;"> {{ user.username }}</div>
+        <a href="{% url 'logout' %}" style="color:black; text-decoration: underline;">Logout</a><br><br>
+        <!-- <a href="{% url 'notification' %}" style="color:white;"> Notification</a><br><br> -->
+        <a href="/mytree/" style="color:black;"> My Tree</a>
+        {% else %}
+        <a href="{% url 'login' %}" style="color:black;">Log in</a><br><br>
+        <a href="{% url 'signup' %}" style="color:black;">Sign up</a>
+        {% endif %}
+    </div>
+
+    <div id="notificationMenu" style="display: none; position: absolute; right: 20px; top: 60px; background: #fff; color: black;
+            width: 300px; padding: 1rem; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); z-index: 999;">
+
+        <h4 style="margin-top: 0;">Notifications</h4>
+        <hr style="margin: 0.5rem 0;">
+
+        {% for n in notifications %}
+        <div style="margin-bottom: 0.8rem;">
+            <strong>{{ n.message }}</strong><br>
+            <small>{{ n.notification_date|date:"d M Y H:i" }}</small>
+        </div>
+        {% empty %}
+        <p>No new notifications</p>
+        {% endfor %}
+    </div>
+
 </body>
+<script>
+    function toggleProfileMenu() {
+        const menu = document.getElementById("profileMenu");
+        menu.style.display = (menu.style.display === "none" || menu.style.display === "") ? "block" : "none";
+    }
+</script>
+
+<script>
+    function toggleNotificationMenu() {
+        const menu = document.getElementById("notificationMenu");
+        menu.style.display = (menu.style.display === "none" || menu.style.display === "") ? "block" : "none";
+    }
+</script>
+
 </html>
