@@ -6,4 +6,5 @@ urlpatterns = [
     path('home/', views.home, name='home'), # หน้า home จริงหลังจากกด Get Started
     path('about/', views.about, name='about'),    
     path('trees/<int:pk>/', views.tree_list, name='tree_list'),
+    path('trees-equipment/', views.tree_equipment_list, name='tree_equipment_list'),
 ]
