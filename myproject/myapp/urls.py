@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.home, name='home'),  # ✅ เส้นทาง root แสดงหน้า welcome
+    path('', views.getstart, name='getstarted'),  # หน้าแรก
+    path('home/', views.home, name='home'),      # หน้า home จริงหลังจากกด Get Started
     path('trees/', views.tree_list, name='tree_list'),
 ]
