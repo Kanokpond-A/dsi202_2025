@@ -11,10 +11,11 @@
         body {
             margin: 0;
             font-family: 'Prompt', sans-serif;
-            background-color: #0D3F31;
+            background-color: #fff;
             color: white;
         }
         .navbar {
+            background-color: #0D3F31;
             display: flex;
             justify-content: space-between;
             padding: 1.5rem 2rem;
@@ -37,6 +38,13 @@
             transform: scale(1.2);
             color: #ffc107;
         }
+
+        .title-section {
+            background-color: #0D3F31;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
         .title {
             font-size: 2.5rem;
             color: #FFA552;
@@ -48,12 +56,13 @@
             display: flex;
             justify-content: center;
             margin: 2rem 0;
+            color: #0D3F31;
         }
         .search-bar input {
-            width: 60%;
-            max-width: 500px;
-            padding: 1rem;
-            border-radius: 20px;
+            width: 90%;
+            max-width: 700px;
+            padding: 1rem 1.5rem;
+            border-radius: 40px;
             border: none;
             font-size: 1rem;
         }
@@ -65,13 +74,14 @@
             padding: 2rem;
         }
         .item-card {
-            background: white;
+            background: #f0f9f2;
             border-radius: 20px;
             color: #0D3F31;
             width: 260px;
             text-align: center;
             padding: 1rem;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            position: relative;
         }
         .item-card img {
             width: 100%;
@@ -88,13 +98,31 @@
         .item-desc {
             font-size: 0.9rem;
             color: #444;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
         }
-        .add-cart {
-            text-decoration: underline;
-            color: #165a26;
-            font-weight: bold;
+        .read-more {
+            font-size: 0.8rem;
+            color: #FFA552;
+            cursor: pointer;
+        }
+        .buy-now-btn, .add-cart-btn {
             display: inline-block;
+            margin: 0.3rem auto;
+            padding: 0.6rem 1.2rem;
+            font-weight: bold;
+            border-radius: 25px;
+            border: none;
+            cursor: pointer;
+        }
+        .buy-now-btn {
+            background-color: #FFA552;
+            color: white;
+            margin-top: 0.6rem;
+        }
+        .add-cart-btn {
+            background-color: transparent;
+            color: #165a26;
+            text-decoration: underline;
         }
         @media (max-width: 768px) {
             .search-bar input {
@@ -126,13 +154,16 @@
     </div>
 </div>
 
-<div class="title">TREE & EQUIPMENT</div>
+<div class="title-section">
+    <div class="title">TREE & EQUIPMENT</div>
 
 <div class="search-bar">
     <form method="get" action=".">
         <input type="text" name="q" placeholder="Search here" value="{{ query }}">
     </form>
 </div>
+</div>
+
 
 <!-- TREE SECTION -->
 <h2 style="text-align:center; color:#FFA552;">Trees</h2>
@@ -141,21 +172,19 @@
     <div class="item-card">
         <img src="{{ tree.image_url }}" alt="{{ tree.name }}">
         <div class="item-title">{{ tree.name }}</div>
-        <div class="item-desc">{{ tree.description|truncatewords:20 }}</div>
+        <div class="item-desc">{{ tree.description|truncatewords:2 }} <span class="read-more" onclick="showPopup('{{ tree.description|escapejs }}')">readmore</span></div>
         <form method="POST" action="{% url 'confirm_order' 'tree' tree.id %}">
             {% csrf_token %}
             <input type="hidden" name="quantity" value="1">
-            <select name="location_id">
+            <!-- <select name="location_id">
                 {% for location in locations %}
                 <option value="{{ location.id }}">{{ location.name }}</option>
                 {% endfor %}
-            </select>
-            <button type="submit">Buy Now</button>
+            </select><br> -->
+            <button type="submit" class="buy-now-btn">BUY NOW</button>
         </form>
-        <a href="{% url 'add_to_cart' 'tree' tree.id %}" class="add-cart">Add to cart</a>
+        <a href="{% url 'add_to_cart' 'tree' tree.id %}" class="add-cart-btn">Add to cart</a>
     </div>
-    {% empty %}
-    <p style="color:white">No trees found.</p>
     {% endfor %}
 </div>
 
@@ -166,21 +195,19 @@
     <div class="item-card">
         <img src="{{ equip.image_url }}" alt="{{ equip.name }}">
         <div class="item-title">{{ equip.name }}</div>
-        <div class="item-desc">{{ equip.description|default:"Quality planting gear."|truncatewords:20 }}</div>
+        <!-- <div class="item-desc">{{ equip.description|truncatewords:10 }} <span class="read-more" onclick="showPopup('{{ equip.description|escapejs }}')">readmore</span></div> -->
         <form method="POST" action="{% url 'confirm_order' 'equipment' equip.id %}">
             {% csrf_token %}
             <input type="hidden" name="quantity" value="1">
-            <select name="location_id">
+            <!-- <select name="location_id">
                 {% for location in locations %}
                 <option value="{{ location.id }}">{{ location.name }}</option>
                 {% endfor %}
-            </select>
-            <button type="submit">Buy Now</button>
+            </select><br> -->
+            <button type="submit" class="buy-now-btn">BUY NOW</button>
         </form>
-        <a href="{% url 'add_to_cart' 'equipment' equip.id %}" class="add-cart">Add to cart</a>
+        <a href="{% url 'add_to_cart' 'equipment' equip.id %}" class="add-cart-btn">Add to cart</a>
     </div>
-    {% empty %}
-    <p style="color:white">No equipment found.</p>
     {% endfor %}
 </div>
 
@@ -208,6 +235,13 @@
     <p>No new notifications</p>
     {% endfor %}
 </div>
+<!-- Popup Modal -->
+<div id="popup" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background-color:rgba(0,0,0,0.5); z-index:999; justify-content:center; align-items:center;">
+    <div style="background:white; padding:2rem; max-width:600px; border-radius:20px; text-align:left; color:black;">
+        <p id="popup-content"></p>
+        <button onclick="document.getElementById('popup').style.display='none'" style="margin-top:1rem; background-color:#FFA552; color:white; padding:0.5rem 1rem; border:none; border-radius:10px; cursor:pointer;">Close</button>
+    </div>
+</div>
 
 <script>
     function toggleProfileMenu() {
@@ -217,6 +251,10 @@
     function toggleNotificationMenu() {
         const menu = document.getElementById("notificationMenu");
         menu.style.display = (menu.style.display === "none" || menu.style.display === "") ? "block" : "none";
+    }
+    function showPopup(content) {
+        document.getElementById('popup-content').innerText = content;
+        document.getElementById('popup').style.display = 'flex';
     }
 </script>
 </body>
