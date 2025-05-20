@@ -49,19 +49,29 @@
                 <p>Amount: {{ item.quantity }}</p>
                 <p>Price: {{ item.price }}</p>
                 <p>Location: กรอกจ้า</p>
+                <form method="POST" action="{% url 'confirm_order' item_type='tree' item_id=item.id %}">
+                    {% csrf_token %}
+                    <label for="location_{{ item.id }}">Location:</label>
+                    <select name="location_id" id="location_{{ item.id }}" class="border p-2 rounded">
+                        {% for location in locations %}
+                        <option value="{{ location.id }}">{{ location.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit" class="btn-confirm">Confirm Order</button>
+                </form>
             </div>
         </div>
         {% endfor %}
-        <form method="POST" action="{% url 'confirm_order' item_type='tree' item_id=tree.id %}">
-  {% csrf_token %}
-  <label for="location">Location:</label>
-  <select name="location_id" id="location" class="border p-2 rounded">
-    {% for location in locations %}
-      <option value="{{ location.id }}">{{ location.name }}</option>
-    {% endfor %}
-  </select>
-  <button type="submit">Confirm Order</button>
-</form>
+
+        {% csrf_token %}
+        <label for="location">Location:</label>
+        <select name="location_id" id="location" class="border p-2 rounded">
+            {% for location in locations %}
+            <option value="{{ location.id }}">{{ location.name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Confirm Order</button>
+        </form>
 
 
     </div>
