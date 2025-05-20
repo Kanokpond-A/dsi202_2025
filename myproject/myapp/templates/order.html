@@ -40,41 +40,34 @@
 
 <body>
     <h2 style="color:#FFA552; margin: 1rem;">ORDER</h2>
-    <div class="order-box">
-        {% for item in items %}
-        <div style="display:flex; gap:2rem; align-items:center;">
-            <img class="order-img" src="{{ item.image_url }}">
-            <div>
-                <p>Tree: {{ item.name }}</p>
-                <p>Amount: {{ item.quantity }}</p>
-                <p>Price: {{ item.price }}</p>
-                <p>Location: กรอกจ้า</p>
-                <form method="POST" action="{% url 'confirm_order' item_type='tree' item_id=item.id %}">
-                    {% csrf_token %}
-                    <label for="location_{{ item.id }}">Location:</label>
-                    <select name="location_id" id="location_{{ item.id }}" class="border p-2 rounded">
-                        {% for location in locations %}
-                        <option value="{{ location.id }}">{{ location.name }}</option>
-                        {% endfor %}
-                    </select>
-                    <button type="submit" class="btn-confirm">Confirm Order</button>
-                </form>
-            </div>
-        </div>
-        {% endfor %}
-
+    <form method="POST" action="{% url 'confirm_selected_order' %}">
         {% csrf_token %}
-        <label for="location">Location:</label>
-        <select name="location_id" id="location" class="border p-2 rounded">
-            {% for location in locations %}
-            <option value="{{ location.id }}">{{ location.name }}</option>
+        <div class="order-box">
+            {% for item in items %}
+            <div style="display:flex; gap:2rem; align-items:center;">
+                <img class="order-img" src="{{ item.image_url }}">
+                <div>
+                    <p>{{ item.name }}</p>
+                    <p>Amount: {{ item.quantity }}</p>
+                    <p>Price: {{ item.price }}</p>
+                </div>
+            </div>
+            <input type="hidden" name="selected_items" value="{{ item.type }}:{{ item.id }}">
+            <input type="hidden" name="quantity_{{ item.type }}_{{ item.id }}" value="{{ item.quantity }}">
             {% endfor %}
-        </select>
-        <button type="submit">Confirm Order</button>
-        </form>
+
+            <label for="location">Location:</label>
+            <select name="location_id" id="location" class="border p-2 rounded" required>
+                {% for location in locations %}
+                <option value="{{ location.id }}">{{ location.name }}</option>
+                {% endfor %}
+            </select>
+
+            <button type="submit" class="btn-confirm">Confirm Order</button>
+        </div>
+    </form>
 
 
-    </div>
 </body>
 
 </html>

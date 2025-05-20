@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 from django.contrib import admin
-from .models import Tree, PlantingLocation, UserPlanting, Notification, Equipment, NewsArticle, Purchase
+from .models import Tree, PlantingLocation, UserPlanting, Notification, Equipment, Purchase, OrderItem
 
 
 
@@ -33,12 +33,18 @@ class NotificationAdmin(admin.ModelAdmin):
 
 @admin.register(Purchase)
 class PurchaseAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'equipment', 'quantity', 'purchase_date')
-    search_fields = ('user__username', 'equipment__name')
+    list_display = ('id', 'user', 'location', 'purchase_date')
+    search_fields = ('user__username',)
     list_filter = ('purchase_date',)
 
-@admin.register(NewsArticle)
-class NewsArticleAdmin(admin.ModelAdmin):
-    list_display = ('title', 'created_at')
-    search_fields = ('title',)
-    list_filter = ('created_at',)
+@admin.register(OrderItem)
+class OrderItemAdmin(admin.ModelAdmin):
+    list_display = ('purchase', 'item_type', 'name', 'quantity', 'price')
+    search_fields = ('name', 'item_type')
+
+
+# @admin.register(NewsArticle)
+# class NewsArticleAdmin(admin.ModelAdmin):
+#     list_display = ('title', 'created_at')
+#     search_fields = ('title',)
+#     list_filter = ('created_at',)

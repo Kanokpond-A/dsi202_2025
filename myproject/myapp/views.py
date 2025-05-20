@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Tree, Equipment, Notification, TreeOrder, Purchase, PlantingLocation
+from .models import Tree, Equipment, Notification, OrderItem, Purchase, PlantingLocation
 from .forms import SignUpForm
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login, logout
@@ -75,27 +75,85 @@ def cart(request):
     })
 
 @csrf_exempt
-def order(request, item_type, item_id):
-    tree = Tree.objects.get(id=item_id)
-    locations = PlantingLocation.objects.all()
+def order(request):
     if request.method == "POST":
-        request.session['cart'] = []  # Clear cart
-        return redirect('tree_equipment_list')  # or redirect to thank you page
-    else:
-        cart_items = request.session.get('cart', [])
-        display_items = []
-        for item in cart_items:
-            model = Tree if item['type'] == 'tree' else Equipment
-            obj = model.objects.get(id=item['id'])
-            display_items.append({
+        selected_raw = request.POST.getlist('selected_items')  # ['tree:2', 'equipment:4', ...]
+        selected_items = []
+        for sel in selected_raw:
+            item_type, item_id = sel.split(":")
+            item_id = int(item_id)
+            quantity = int(request.POST.get(f'quantity_{item_type}_{item_id}', 1))
+
+            model = Tree if item_type == 'tree' else Equipment
+            obj = model.objects.get(id=item_id)
+
+            selected_items.append({
+                'type': item_type,
+                'id': item_id,
                 'name': obj.name,
                 'image_url': obj.image_url,
-                'price': obj.price,
-                'quantity': item['quantity'],
+                'price': float(obj.price),
+                'quantity': quantity,
             })
-        return render(request, 'order.html', {'items': display_items,
-                                              'tree': tree,
-        'locations': locations})
+
+        request.session['selected_items'] = selected_items
+        locations = PlantingLocation.objects.all()
+        return render(request, 'order.html', {
+            'items': selected_items,
+            'locations': locations
+        })
+
+    return redirect('cart')
+
+
+def confirm_selected_order(request):
+    if request.method == 'POST':
+        selected_raw = request.POST.getlist('selected_items')
+        location_id = request.POST.get('location_id')
+        location = PlantingLocation.objects.get(id=location_id)
+
+        items = []
+        for sel in selected_raw:
+            item_type, item_id = sel.split(':')
+            item_id = int(item_id)
+            quantity = int(request.POST.get(f'quantity_{item_type}_{item_id}', 1))
+
+            model = Tree if item_type == 'tree' else Equipment
+            obj = model.objects.get(id=item_id)
+
+            items.append({
+                'item_type': item_type,
+                'item_id': item_id,
+                'name': obj.name,
+                'price': obj.price,
+                'quantity': quantity
+            })
+
+        # สร้าง Purchase หลัก
+        purchase = Purchase.objects.create(
+            user=request.user,
+            location=location
+        )
+
+        # บันทึก OrderItem
+        for item in items:
+            OrderItem.objects.create(
+                purchase=purchase,
+                item_type=item['item_type'],
+                item_id=item['item_id'],
+                name=item['name'],
+                price=item['price'],
+                quantity=item['quantity'],
+            )
+
+        request.session['order_id'] = purchase.id
+        return redirect('payment')
+    
+    return redirect('cart')
+
+
+
+
 
 def tree_list(request):
     return render(request, 'tree_list.html')
@@ -136,7 +194,7 @@ def notification_list(request):
 
 @login_required
 def mytree(request):
-    my_trees = TreeOrder.objects.filter(user=request.user)
+    my_trees = OrderItem.objects.filter(user=request.user)
     purchases = Purchase.objects.filter(user=request.user)
     return render(request, 'mytree.html', {'my_trees': my_trees})
 
