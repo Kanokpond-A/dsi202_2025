@@ -22,7 +22,8 @@
 </head>
 <body>
   <h1>PAYMENT</h1>
+  <p>Scan this QR to pay</p>
   <img src="{% url 'generate_qr' order.id %}" alt="QR Code" width="250" height="250">
-
+  <h2>{{ order.total_price }} ฿</h2>
 </body>
 </html>

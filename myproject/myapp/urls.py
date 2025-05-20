@@ -23,6 +23,7 @@ urlpatterns = [
     path('mytree/', views.mytree, name='mytree'),
     path('payment/', views.payment, name='payment'),
     path('generate-qr/<int:order_id>/', views.generate_qr, name='generate_qr'),
+
     
 
 

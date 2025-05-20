@@ -198,56 +198,149 @@ def mytree(request):
     purchases = Purchase.objects.filter(user=request.user)
     return render(request, 'mytree.html', {'my_trees': my_trees})
 
-def confirm_order(request, item_type, item_id):
+def confirm_order(request):
     if request.method == 'POST':
-        # สมมุติคุณดึงข้อมูลเหล่านี้มาจากฟอร์ม
-        tree_id = request.POST.get('tree_id')
-        amount = request.POST.get('amount')
-        address = request.POST.get('address')  # หรือเอาค่าจาก user.profile ก็ได้
+        selected_raw = request.POST.getlist('selected_items')
         location_id = request.POST.get('location_id')
         location = PlantingLocation.objects.get(id=location_id)
 
+        items = []
+        total_price = 0
 
-        # สร้างคำสั่งซื้อ
-        order = Purchase.objects.create(
+        for sel in selected_raw:
+            item_type, item_id = sel.split(':')
+            item_id = int(item_id)
+            quantity = int(request.POST.get(f'quantity_{item_type}_{item_id}', 1))
+
+            model = Tree if item_type == 'tree' else Equipment
+            obj = model.objects.get(id=item_id)
+
+            item_total = obj.price * quantity
+            total_price += item_total
+
+            items.append({
+                'item_type': item_type,
+                'item_id': item_id,
+                'name': obj.name,
+                'price': obj.price,
+                'quantity': quantity
+            })
+
+        # ✅ สร้าง Purchase หลัก
+        purchase = Purchase.objects.create(
             user=request.user,
-            tree_id=tree_id,
-            item_type=item_type,
-            price=Tree.objects.get(id=item_id).price,
-            amount=amount,
-            address=address,
             location=location,
+            total_price=total_price  # ✅ ใช้ฟิลด์ใหม่
         )
 
-        # เก็บ order.id ลง session
-        request.session['order_id'] = order.id
+        # ✅ เพิ่ม OrderItem ทุกรายการ
+        for item in items:
+            OrderItem.objects.create(
+                purchase=purchase,
+                item_type=item['item_type'],
+                item_id=item['item_id'],
+                name=item['name'],
+                price=item['price'],
+                quantity=item['quantity'],
+            )
 
-        return redirect('payment')  # ไปหน้าแสดง QR
+        # ✅ ส่ง order ไป payment
+        request.session['order_id'] = purchase.id
+        return redirect('payment')
 
-    return redirect('cart')  # fallback ถ้ามาแบบ GET
+    return redirect('cart')
 
 
 def payment(request):
     order_id = request.session.get('order_id')
 
     if not order_id:
-        return redirect('cart')  # กลับไปที่ cart ถ้าไม่มีออเดอร์
+        return redirect('cart')
 
     order = Purchase.objects.get(id=order_id)
-
-    return render(request, 'payment.html', {'order': order})
-
+    return render(request, 'payment.html', {'order': order})  # ✅ ต้องมี 'order'
 
 
-def generate_qr(request):
-    data = "00020101021129370016A000000677010111011300660123456789802TH530376463041234"  # ใส่ PromptPay Payload หรือ URL
-    img = qrcode.make(data)
 
+def crc16_ccitt_false(data: bytes) -> int:
+    crc = 0xFFFF
+    for byte in data:
+        crc ^= byte << 8
+        for _ in range(8):
+            if (crc & 0x8000):
+                crc = (crc << 1) ^ 0x1021
+            else:
+                crc <<= 1
+            crc &= 0xFFFF
+    return crc
+
+def _format_tlv(tag: str, value: str) -> str:
+    return f"{tag}{len(value):02d}{value}"
+
+def calculate_crc(payload: str) -> str:
+    encoded_string = payload.encode('ascii')
+    crc_val = crc16_ccitt_false(encoded_string)
+    return f"{crc_val:04X}"
+
+def generate_promptpay_payload(
+    mobile_number: str = None,
+    national_id: str = None,
+    amount: float = 0.0
+) -> str:
+    if not mobile_number and not national_id:
+        raise ValueError("You must provide either a mobile_number or a national_id")
+
+    payload = ""
+    payload += _format_tlv("00", "01")
+    payload += _format_tlv("01", "11")  # Static QR
+
+    # --- Merchant Account Info (Tag 29) ---
+    merchant = _format_tlv("00", "A000000677010111")  # PromptPay AID
+
+    if mobile_number:
+        # Strip 0 -> replace with 66 (Thailand)
+        formatted_mobile = f"0066{mobile_number[1:]}"
+        merchant += _format_tlv("01", formatted_mobile)
+    elif national_id:
+        cleaned_nid = national_id.replace("-", "")
+        if len(cleaned_nid) != 13 or not cleaned_nid.isdigit():
+            raise ValueError("National ID must be 13 digits")
+        merchant += _format_tlv("02", cleaned_nid)
+
+    payload += _format_tlv("29", merchant)
+    payload += _format_tlv("53", "764")  # Currency: THB
+    payload += _format_tlv("54", f"{amount:.2f}")  # Amount
+    payload += _format_tlv("58", "TH")  # Country Code
+
+    payload_for_crc = payload + "6304"
+    crc = calculate_crc(payload_for_crc)
+    payload += _format_tlv("63", crc)
+
+    return payload
+
+def generate_qr(request, order_id):
+    order = Purchase.objects.get(id=order_id)
+
+    # คำนวณราคารวมจากรายการย่อย
+    items = OrderItem.objects.filter(purchase=order)
+    amount = sum(item.price * item.quantity for item in items)
+
+    # ใช้เบอร์หรือบัตรประชาชน PromptPay ของร้านคุณ
+    promptpay_mobile = None  # เช่น "0812345678"
+    promptpay_nid = "1839901855668"  # ต้องเป็นเลข 13 หลักเท่านั้น
+
+    payload = generate_promptpay_payload(
+        mobile_number=promptpay_mobile,
+        national_id=promptpay_nid,
+        amount=float(order.total_price)
+    )
+
+    qr = qrcode.make(payload)
     buffer = BytesIO()
-    img.save(buffer, format="PNG")
-    image_data = buffer.getvalue()
+    qr.save(buffer, format='PNG')
+    buffer.seek(0)
 
-    return HttpResponse(image_data, content_type="image/png")
+    return HttpResponse(buffer.getvalue(), content_type='image/png')
 
 
 

@@ -49,6 +49,7 @@ class Purchase(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     location = models.ForeignKey(PlantingLocation, on_delete=models.SET_NULL, null=True)
     purchase_date = models.DateTimeField(auto_now_add=True)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)  # ✅ เพิ่มตรงนี้
 
     def __str__(self):
         return f"Order #{self.id} by {self.user.username}"
