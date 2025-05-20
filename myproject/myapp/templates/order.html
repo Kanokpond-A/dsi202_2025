@@ -40,7 +40,7 @@
 
 <body>
     <h2 style="color:#FFA552; margin: 1rem;">ORDER</h2>
-    <form method="POST" action="{% url 'confirm_selected_order' %}">
+    <form method="POST" action="{% url 'confirm_order' %}">
         {% csrf_token %}
         <div class="order-box">
             {% for item in items %}

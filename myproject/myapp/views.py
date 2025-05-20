@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Tree, Equipment, Notification, OrderItem, Purchase, PlantingLocation
+from .models import Tree, Equipment, Notification, OrderItem, Purchase, PlantingLocation, TreeOrder
 from .forms import SignUpForm
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login, logout
@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 import qrcode
 from io import BytesIO
 from django.http import HttpResponse
+from django.views.decorators.http import require_POST
 
 def getstart(request):
     return render(request, 'getstarted.html')
@@ -198,15 +199,35 @@ def mytree(request):
     purchases = Purchase.objects.filter(user=request.user)
     return render(request, 'mytree.html', {'my_trees': my_trees})
 
-def confirm_order(request):
-    if request.method == 'POST':
+def confirm_order(request, item_type=None, item_id=None):
+    if request.method != 'POST':
+        return redirect('cart')
+
+    location_id = request.POST.get('location_id')
+    location = PlantingLocation.objects.get(id=location_id)
+    items = []
+    total_price = 0
+
+    # ✅ CASE 1: จาก Buy Now (item_type และ item_id ถูกส่งมา)
+    if item_type and item_id:
+        quantity = int(request.POST.get('quantity', 1))
+        model = Tree if item_type == 'tree' else Equipment
+        obj = model.objects.get(id=item_id)
+
+        item_total = obj.price * quantity
+        total_price += item_total
+
+        items.append({
+            'item_type': item_type,
+            'item_id': item_id,
+            'name': obj.name,
+            'price': obj.price,
+            'quantity': quantity
+        })
+
+    # ✅ CASE 2: จาก cart (เลือกหลายชิ้น)
+    else:
         selected_raw = request.POST.getlist('selected_items')
-        location_id = request.POST.get('location_id')
-        location = PlantingLocation.objects.get(id=location_id)
-
-        items = []
-        total_price = 0
-
         for sel in selected_raw:
             item_type, item_id = sel.split(':')
             item_id = int(item_id)
@@ -226,29 +247,26 @@ def confirm_order(request):
                 'quantity': quantity
             })
 
-        # ✅ สร้าง Purchase หลัก
-        purchase = Purchase.objects.create(
-            user=request.user,
-            location=location,
-            total_price=total_price  # ✅ ใช้ฟิลด์ใหม่
+    # ✅ สร้างออเดอร์หลัก
+    purchase = Purchase.objects.create(
+        user=request.user,
+        location=location,
+        total_price=total_price
+    )
+
+    # ✅ บันทึกรายการย่อย
+    for item in items:
+        OrderItem.objects.create(
+            purchase=purchase,
+            item_type=item['item_type'],
+            item_id=item['item_id'],
+            name=item['name'],
+            price=item['price'],
+            quantity=item['quantity'],
         )
 
-        # ✅ เพิ่ม OrderItem ทุกรายการ
-        for item in items:
-            OrderItem.objects.create(
-                purchase=purchase,
-                item_type=item['item_type'],
-                item_id=item['item_id'],
-                name=item['name'],
-                price=item['price'],
-                quantity=item['quantity'],
-            )
-
-        # ✅ ส่ง order ไป payment
-        request.session['order_id'] = purchase.id
-        return redirect('payment')
-
-    return redirect('cart')
+    request.session['order_id'] = purchase.id
+    return redirect('payment')
 
 
 def payment(request):
@@ -343,4 +361,54 @@ def generate_qr(request, order_id):
     return HttpResponse(buffer.getvalue(), content_type='image/png')
 
 
+@login_required
+def confirm_payment(request):
+    order_id = request.session.get('order_id')
+    if not order_id:
+        return redirect('cart')
+
+    purchase = Purchase.objects.get(id=order_id)
+
+    # แปลง OrderItem เป็น TreeOrder
+    items = purchase.items.all()  # ต้องมี related_name='items' ใน OrderItem
+    for item in items:
+        if item.item_type == 'tree':
+            TreeOrder.objects.create(
+                user=request.user,
+                tree_id=item.item_id,
+                quantity=item.quantity,
+                price=item.price
+            )
+
+    # ล้าง session
+    del request.session['order_id']
+
+    return redirect('mytree')
+
+@login_required
+def mytree(request):
+    my_trees = TreeOrder.objects.filter(user=request.user).order_by('-confirmed_at')
+    return render(request, 'mytree.html', {
+        'my_trees': my_trees
+    })
+
+def remove_from_cart(request, item_type, item_id):
+    cart = request.session.get('cart', [])
+    cart = [item for item in cart if not (item['type'] == item_type and item['id'] == item_id)]
+    request.session['cart'] = cart
+    return redirect('cart')
+
+@require_POST
+def bulk_remove_from_cart(request):
+    selected = request.POST.getlist('selected_items')
+    cart = request.session.get('cart', [])
+
+    remaining_cart = []
+    for item in cart:
+        key = f"{item['type']}:{item['id']}"
+        if key not in selected:
+            remaining_cart.append(item)
+
+    request.session['cart'] = remaining_cart
+    return redirect('cart')
 

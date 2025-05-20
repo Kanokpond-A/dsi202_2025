@@ -8,7 +8,7 @@
   <style>
     body {
       font-family: 'Prompt', sans-serif;
-      background-color: #1e2d26;
+      background-color: #0D3F31;
       color: white;
       margin: 0;
       padding: 2rem;
@@ -18,58 +18,72 @@
       color: #FFA552;
       font-size: 2.4rem;
       margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .tree-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
     }
 
     .tree-card {
       background-color: white;
-      border-radius: 12px;
-      padding: 1rem;
+      border-radius: 16px;
+      padding: 1.5rem;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      margin-bottom: 1.5rem;
-      color: black;
+      color: #0D3F31;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
     }
 
     .tree-card img {
-      width: 120px;
-      height: 100px;
-      border-radius: 8px;
+      width: 100%;
+      height: 160px;
+      border-radius: 12px;
       object-fit: cover;
-      margin-right: 1.5rem;
-    }
-
-    .tree-info {
-      line-height: 1.5;
+      margin-bottom: 1rem;
     }
 
     .tree-info span {
       display: block;
       font-weight: bold;
-      margin-bottom: 0.3rem;
+      margin: 0.3rem 0;
+      font-size: 1rem;
     }
 
     .tree-info small {
       font-size: 0.85rem;
-      color: #555;
+      color: #444;
+    }
+
+    .empty-message {
+      text-align: center;
+      font-size: 1.1rem;
+      color: #ccc;
     }
   </style>
 </head>
-
 <body>
-  <h1>MY TREE HISTORY</h1>
+  <h1>🌳 My Tree History</h1>
 
-  {% for order in my_trees %}
+  {% if my_trees %}
+  <div class="tree-list">
+    {% for order in my_trees %}
     <div class="tree-card">
       <img src="{{ order.tree.image_url }}" alt="{{ order.tree.name }}">
       <div class="tree-info">
         <span>🌳 {{ order.tree.name }}</span>
-        <span>💰 Price: {{ order.price }} THB</span>
-        <span>🪴 Amount: {{ order.quantity }}</span>
-        <span>📅 Confirmed: {{ order.confirmed_at|date:"d M Y, H:i" }}</span>
+        <span>💰 {{ order.price }} THB</span>
+        <span>🩴 Amount: {{ order.quantity }}</span>
+        <span>🗓 Confirmed: {{ order.confirmed_at|date:"d M Y, H:i" }}</span>
       </div>
     </div>
-  {% empty %}
-    <p>No tree orders confirmed yet.</p>
-  {% endfor %}
+    {% endfor %}
+  </div>
+  {% else %}
+    <p class="empty-message">No tree orders confirmed yet.</p>
+  {% endif %}
 </body>
 </html>

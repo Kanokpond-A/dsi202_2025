@@ -18,6 +18,20 @@
     h1 {
       color: #FFA552;
     }
+    .btn-confirm {
+      background-color: #FFA552;
+      color: white;
+      padding: 1rem 2rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 30px;
+      margin-top: 2rem;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .btn-confirm:hover {
+      background-color: #ff8c00;
+    }
   </style>
 </head>
 <body>
@@ -25,5 +39,9 @@
   <p>Scan this QR to pay</p>
   <img src="{% url 'generate_qr' order.id %}" alt="QR Code" width="250" height="250">
   <h2>{{ order.total_price }} ฿</h2>
+  <form method="POST" action="{% url 'confirm_payment' %}">
+    {% csrf_token %}
+    <button type="submit" class="btn-confirm">CONFIRM PAYMENT</button>
+  </form>
 </body>
 </html>

@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 from django.contrib import admin
-from .models import Tree, PlantingLocation, UserPlanting, Notification, Equipment, Purchase, OrderItem
+from .models import Tree, PlantingLocation, UserPlanting, Notification, Equipment, Purchase, OrderItem, TreeOrder
 
 
 
@@ -48,3 +48,11 @@ class OrderItemAdmin(admin.ModelAdmin):
 #     list_display = ('title', 'created_at')
 #     search_fields = ('title',)
 #     list_filter = ('created_at',)
+
+
+@admin.register(TreeOrder)
+class TreeOrderAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'tree', 'quantity', 'price', 'location', 'status', 'confirmed_at')
+    list_filter = ('status', 'confirmed_at', 'location')
+    search_fields = ('user__username', 'tree__name')
+    readonly_fields = ('confirmed_at',)

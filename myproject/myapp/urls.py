@@ -12,10 +12,9 @@ urlpatterns = [
     path('cart/', views.cart, name='cart'),
     path('add-to-cart/<str:item_type>/<int:item_id>/', views.add_to_cart, name='add_to_cart'),
     path('order/', views.order, name='order'),
-    # path('order/<str:item_type>/<int:item_id>/', views.order, name='order'),
-    # path('order/', views.order_selected, name='order'),
-    # path('confirm_order/<str:item_type>/<int:item_id>/', views.confirm_order, name='confirm_order'),
-    path('confirm-selected/', views.confirm_selected_order, name='confirm_selected_order'),
+    path('confirm-order/<str:item_type>/<int:item_id>/', views.confirm_order, name='confirm_order'),
+    path('confirm-order/', views.confirm_order, name='confirm_order'),
+    # path('confirm-order/', views.confirm_order, name='confirm_selected_order'),
     path('login/', views.login_view, name='login'),
     path('signup/', views.signup_view, name='signup'),
     path('logout/', views.logout_view, name='logout'),
@@ -23,6 +22,11 @@ urlpatterns = [
     path('mytree/', views.mytree, name='mytree'),
     path('payment/', views.payment, name='payment'),
     path('generate-qr/<int:order_id>/', views.generate_qr, name='generate_qr'),
+    path('confirm-payment/', views.confirm_payment, name='confirm_payment'),
+    path('remove-from-cart/<str:item_type>/<int:item_id>/', views.remove_from_cart, name='remove_from_cart'),
+    path('remove-selected/', views.bulk_remove_from_cart, name='bulk_remove_from_cart'),
+
+
 
     
 
