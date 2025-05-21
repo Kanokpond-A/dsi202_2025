@@ -11,7 +11,7 @@ router.register(r'locations', PlantingLocationViewSet)
 
 urlpatterns = [
 
-    # --- 🌐 Web Views ---
+    # ---  Web Views ---
     path('', views.getstart, name='getstarted'),                  # หน้าเริ่มต้น
     path('home/', views.home, name='home'),                       # หน้า Home
     path('about/', views.about, name='about'),                    # เกี่ยวกับเรา
@@ -38,6 +38,6 @@ urlpatterns = [
     path('remove-from-cart/<str:item_type>/<int:item_id>/', views.remove_from_cart, name='remove_from_cart'),
     path('remove-selected/', views.bulk_remove_from_cart, name='bulk_remove_from_cart'),
 
-    # --- 🧩 API Routes ---
+    # ---  API Routes ---
     path('api/', include(router.urls)),  # API: /api/trees/, /api/equipment/, /api/locations/
 ]
