@@ -10,6 +10,8 @@ from io import BytesIO
 from django.http import HttpResponse
 from django.views.decorators.http import require_POST
 from itertools import zip_longest
+from rest_framework import viewsets
+from .serializers import TreeSerializer, EquipmentSerializer, PlantingLocationSerializer
 # # from django.shortcuts import get_object_or_404
 # from django.contrib import messages
 
@@ -27,9 +29,9 @@ def home(request):
         'notifications': notifications
     })
 
-# def tree_detail(request, pk):
+# def tree_list(request, pk):
 #     tree = Tree.objects.get(pk=pk)
-#     return render(request, 'tree_detail.html', {'tree': tree})
+#     return render(request, 'tree_list.html', {'tree': tree})
 
 
 def about(request):
@@ -451,8 +453,12 @@ def confirm_payment(request):
                 user=request.user,
                 tree_id=item.item_id,
                 quantity=item.quantity,
-                price=item.price
+                price=item.price,
+                location=purchase.location,
             )
+             # ✅ mark ว่าชำระเงินแล้ว
+    purchase.status = 'paid'  # เพิ่มฟิลด์ status ถ้ายังไม่มี
+    purchase.save()
 
     # ล้าง session
     del request.session['order_id']
@@ -464,7 +470,8 @@ def mytree(request):
     my_trees = TreeOrder.objects.filter(user=request.user).order_by('-confirmed_at')
     my_equipment = OrderItem.objects.filter(
         purchase__user=request.user,
-        item_type='equipment'
+        item_type='equipment',
+        purchase__status='paid'  # ✅ เฉพาะที่ confirm แล้ว
     ).order_by('-purchase__purchase_date')  # ถ้าใช้ timestamp ชื่ออื่นให้เปลี่ยน
 
     return render(request, 'mytree.html', {
@@ -492,3 +499,14 @@ def bulk_remove_from_cart(request):
     request.session['cart'] = remaining_cart
     return redirect('cart')
 
+class TreeViewSet(viewsets.ModelViewSet):
+    queryset = Tree.objects.all()
+    serializer_class = TreeSerializer
+
+class EquipmentViewSet(viewsets.ModelViewSet):
+    queryset = Equipment.objects.all()
+    serializer_class = EquipmentSerializer
+
+class PlantingLocationViewSet(viewsets.ModelViewSet):
+    queryset = PlantingLocation.objects.all()
+    serializer_class = PlantingLocationSerializer

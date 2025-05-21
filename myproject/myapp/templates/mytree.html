@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 <head>
   <meta charset="UTF-8" />
   <title>My Order History</title>
@@ -95,6 +97,11 @@
     }
   </style>
 </head>
+<a href="{% url 'tree_equipment_list' %}"
+  style="color:#0D3F31; font-size: 1.5rem; text-decoration: none; margin-left: 1rem;">
+  <i class="fa-solid fa-circle-left"></i> Back
+</a>
+
 <body>
   <h1>My Order History</h1>
 
@@ -107,38 +114,38 @@
     <!-- Tree Orders -->
     <div id="tree" class="order-list active">
       {% if my_trees %}
-        {% for order in my_trees %}
-          <div class="item">
-            <img src="{{ order.tree.image_url }}" alt="{{ order.tree.name }}">
-            <div class="info">
-              <span><strong>{{ order.tree.name }}</strong></span>
-              <span>{{ order.price }} THB</span>
-              <span>Amount: {{ order.quantity }}</span>
-              <span>{{ order.confirmed_at|date:"d M Y, H:i" }}</span>
-            </div>
-          </div>
-        {% endfor %}
+      {% for order in my_trees %}
+      <div class="item">
+        <img src="{{ order.tree.image_url }}" alt="{{ order.tree.name }}">
+        <div class="info">
+          <span><strong>{{ order.tree.name }}</strong></span>
+          <span>{{ order.price }} THB</span>
+          <span>Amount: {{ order.quantity }}</span>
+          <span>{{ order.confirmed_at|date:"d M Y, H:i" }}</span>
+        </div>
+      </div>
+      {% endfor %}
       {% else %}
-        <p class="empty-message">No tree orders found.</p>
+      <p class="empty-message">No tree orders found.</p>
       {% endif %}
     </div>
 
     <!-- Equipment Orders -->
     <div id="equipment" class="order-list">
       {% if my_equipment %}
-        {% for order in my_equipment %}
-          <div class="item">
-            <img src="{{ order.image_url }}" alt="{{ order.name }}">
-            <div class="info">
-              <span><strong>{{ order.name }}</strong></span>
-              <span>{{ order.price }} THB</span>
-              <span>Amount: {{ order.quantity }}</span>
-              <span>{{ order.purchase.purchase_date|date:"d M Y, H:i" }}</span>
-            </div>
-          </div>
-        {% endfor %}
+      {% for order in my_equipment %}
+      <div class="item">
+        <img src="{{ order.image_url }}" alt="{{ order.name }}">
+        <div class="info">
+          <span><strong>{{ order.name }}</strong></span>
+          <span>{{ order.price }} THB</span>
+          <span>Amount: {{ order.quantity }}</span>
+          <span>{{ order.purchase.purchase_date|date:"d M Y, H:i" }}</span>
+        </div>
+      </div>
+      {% endfor %}
       {% else %}
-        <p class="empty-message">No equipment orders found.</p>
+      <p class="empty-message">No equipment orders found.</p>
       {% endif %}
     </div>
   </div>
@@ -153,4 +160,5 @@
     }
   </script>
 </body>
+
 </html>

@@ -244,7 +244,7 @@
             <div class="recommend-card">
                 <img src="{{ tree.image_url }}" alt="{{ tree.name }}">
                 <h4>{{ tree.name }}</h4>
-                <a href="{% url 'tree_list' tree.id %}" class="add-cart">Add to cart</a>
+                <a href="{% url 'add_to_cart' 'tree' tree.id %}" class="add-cart-btn">Add to cart</a>
             </div>
             {% empty %}
             <p>No trees available.</p>

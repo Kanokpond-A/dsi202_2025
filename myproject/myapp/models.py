@@ -52,6 +52,11 @@ class Purchase(models.Model):
     total_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)  # ✅ เพิ่มตรงนี้
     address = models.TextField(blank=True, null=True)
     tel = models.CharField(max_length=20, blank=True, null=True)
+    status = models.CharField(
+        max_length=20,
+        choices=[('pending', 'Pending'), ('paid', 'Paid')],
+        default='pending'
+    )
 
 
     def __str__(self):
