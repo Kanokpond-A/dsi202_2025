@@ -189,6 +189,7 @@ def confirm_selected_order(request):
                 name=item['name'],
                 price=item['price'],
                 quantity=item['quantity'],
+                image_url=obj.image_url
             )
 
         request.session['order_id'] = purchase.id
@@ -304,6 +305,7 @@ def confirm_order(request, item_type=None, item_id=None):
             name=item['name'],
             price=item['price'],
             quantity=item['quantity'],
+            image_url=obj.image_url 
         )
 
     request.session['order_id'] = purchase.id
@@ -429,8 +431,14 @@ def confirm_payment(request):
 @login_required
 def mytree(request):
     my_trees = TreeOrder.objects.filter(user=request.user).order_by('-confirmed_at')
+    my_equipment = OrderItem.objects.filter(
+        purchase__user=request.user,
+        item_type='equipment'
+    ).order_by('-purchase__purchase_date')  # ถ้าใช้ timestamp ชื่ออื่นให้เปลี่ยน
+
     return render(request, 'mytree.html', {
-        'my_trees': my_trees
+        'my_trees': my_trees,
+        'my_equipment': my_equipment
     })
 
 def remove_from_cart(request, item_type, item_id):
