@@ -30,7 +30,7 @@
         }
 
         .overlay {
-            background-color: rgba(0, 0, 0, 0);
+            background-color: rgba(0, 0, 0, 0.4);
             position: absolute;
             top: 0;
             left: 0;
@@ -142,10 +142,10 @@
                 <a href="/trees-equipment/">Tree & Equipment</a>
             </div>
             <div class="navbar-icons">
-                <a href="{% url 'notification' %}" title="Notifications">
+                <a href="#" onclick="toggleProfileMenu()">
                     <i class="fa-solid fa-bell"></i>
                 </a>
-                <a href="{% url 'cart' %}">
+                <a href="#" onclick="toggleProfileMenu()">
                     <i class="fa-solid fa-cart-shopping"></i>
                 </a>
                 <a href="#" onclick="toggleProfileMenu()">

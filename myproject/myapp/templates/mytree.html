@@ -20,38 +20,50 @@
       margin-bottom: 2rem;
     }
 
-    .history-table {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      background: white;
+    .order-wrapper {
+      background: #fff;
       border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-    }
-
-    .column {
       padding: 2rem;
-      border-right: 1px solid #eee;
+      max-width: 1000px;
+      margin: auto;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
     }
 
-    .column:last-child {
-      border-right: none;
+    .tab-menu {
+      display: flex;
+      justify-content: start;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
     }
 
-    .column h2 {
-      text-align: center;
-      font-size: 1.6rem;
+    .tab-button {
+      padding: 0.6rem 1.2rem;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      background-color: #fff;
+      border: none;
       color: #0D3F31;
+      transition: background-color 0.3s ease;
+    }
+
+    .tab-button.active {
       background-color: #E6F4EC;
-      padding: 0.6rem;
-      border-radius: 8px;
+    }
+
+    .order-list {
+      display: none;
+    }
+
+    .order-list.active {
+      display: block;
     }
 
     .item {
       display: flex;
       gap: 1rem;
-      margin: 1.5rem 0;
-      border-bottom: 1px solid #ddd;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid #eee;
       padding-bottom: 1rem;
     }
 
@@ -62,84 +74,83 @@
       border-radius: 12px;
     }
 
-    .info {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
     .info span {
+      display: block;
       font-size: 1rem;
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.2rem;
     }
 
     .empty-message {
       text-align: center;
       color: #888;
       font-size: 1rem;
-      margin-top: 2rem;
     }
 
     @media (max-width: 768px) {
-      .history-table {
-        grid-template-columns: 1fr;
-      }
-
-      .column {
-        border-right: none;
-        border-bottom: 1px solid #eee;
-      }
-
-      .column:last-child {
-        border-bottom: none;
+      .item {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
       }
     }
   </style>
 </head>
 <body>
-  <h1> My Order History</h1>
+  <h1>My Order History</h1>
 
-  <div class="history-table">
-    <!-- TREE ORDERS -->
-    <div class="column">
-      <h2>TREE</h2>
+  <div class="order-wrapper">
+    <div class="tab-menu">
+      <button class="tab-button active" onclick="showTab('tree')">TREE</button>
+      <button class="tab-button" onclick="showTab('equipment')">EQUIPMENT</button>
+    </div>
+
+    <!-- Tree Orders -->
+    <div id="tree" class="order-list active">
       {% if my_trees %}
         {% for order in my_trees %}
-        <div class="item">
-          <img src="{{ order.tree.image_url }}" alt="{{ order.tree.name }}">
-          <div class="info">
-            <span><strong>{{ order.tree.name }}</strong></span>
-            <span> {{ order.price }} THB</span>
-            <span> Amount: {{ order.quantity }}</span>
-            <span> {{ order.confirmed_at|date:"d M Y, H:i" }}</span>
+          <div class="item">
+            <img src="{{ order.tree.image_url }}" alt="{{ order.tree.name }}">
+            <div class="info">
+              <span><strong>{{ order.tree.name }}</strong></span>
+              <span>{{ order.price }} THB</span>
+              <span>Amount: {{ order.quantity }}</span>
+              <span>{{ order.confirmed_at|date:"d M Y, H:i" }}</span>
+            </div>
           </div>
-        </div>
         {% endfor %}
       {% else %}
-        <p class="empty-message">No tree orders yet.</p>
+        <p class="empty-message">No tree orders found.</p>
       {% endif %}
     </div>
 
-     <!-- EQUIPMENT ORDERS -->
-    <div class="column">
-      <h2>EQUIPMENT</h2>
+    <!-- Equipment Orders -->
+    <div id="equipment" class="order-list">
       {% if my_equipment %}
         {% for order in my_equipment %}
-        <div class="item">
-          <img src="{{ order.image_url }}" alt="{{ order.name }}">
-          <div class="info">
-            <span><strong>{{ order.name }}</strong></span>
-            <span> {{ order.price }} THB</span>
-            <span> Amount: {{ order.quantity }}</span>
-            <span> {{ order.confirmed_at|date:"d M Y, H:i" }}</span>
+          <div class="item">
+            <img src="{{ order.image_url }}" alt="{{ order.name }}">
+            <div class="info">
+              <span><strong>{{ order.name }}</strong></span>
+              <span>{{ order.price }} THB</span>
+              <span>Amount: {{ order.quantity }}</span>
+              <span>{{ order.purchase.purchase_date|date:"d M Y, H:i" }}</span>
+            </div>
           </div>
-        </div>
         {% endfor %}
       {% else %}
-        <p class="empty-message">No equipment orders yet.</p>
+        <p class="empty-message">No equipment orders found.</p>
       {% endif %}
     </div>
   </div>
 
+  <script>
+    function showTab(tab) {
+      document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.order-list').forEach(list => list.classList.remove('active'));
+
+      document.querySelector(`[onclick="showTab('${tab}')"]`).classList.add('active');
+      document.getElementById(tab).classList.add('active');
+    }
+  </script>
 </body>
 </html>

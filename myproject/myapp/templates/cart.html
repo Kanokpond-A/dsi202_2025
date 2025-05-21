@@ -1,22 +1,27 @@
 <!DOCTYPE html>
 <html>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 <head>
   <title>Cart | PLOOKJING</title>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
-      background: #0D3F31;
+      background: #f0f9f2;
       color: white;
       font-family: 'Prompt', sans-serif;
       margin: 0;
       padding: 2rem;
     }
+
     .title {
-      color: #FFA552;
-      font-size: 2.2rem;
+      text-align: center;
+      color: #0D3F31;
+      font-size: 2.4rem;
       font-weight: bold;
       margin-bottom: 1rem;
     }
+
     .cart-box {
       background: white;
       color: black;
@@ -25,6 +30,7 @@
       max-width: 900px;
       margin: auto;
     }
+
     .cart-item {
       display: flex;
       align-items: center;
@@ -33,13 +39,17 @@
       border-bottom: 1px solid #ccc;
       padding-bottom: 1rem;
     }
+
     .cart-item img {
       width: 100px;
       height: 100px;
       object-fit: cover;
       border-radius: 10px;
     }
-    .btn-purchase, .btn-delete, .btn-bulk-delete {
+
+    .btn-purchase,
+    .btn-delete,
+    .btn-bulk-delete {
       background: #FFA552;
       padding: 0.8rem 1.5rem;
       border-radius: 30px;
@@ -51,29 +61,37 @@
       margin-top: 1rem;
       transition: background 0.3s ease;
     }
+
     .btn-purchase:hover {
       background: #e69535;
     }
+
     .btn-delete {
-      background: #e74c3c;
+      background: #fff;
       margin-left: 1rem;
     }
-    .btn-delete:hover, .btn-bulk-delete:hover {
+
+    .btn-delete:hover,
+    .btn-bulk-delete:hover {
       background: #c0392b;
     }
+
     .total-box {
       margin-top: 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
+
     input[type="number"] {
       width: 60px;
     }
+
     .bulk-actions {
       text-align: right;
       margin-top: 1rem;
     }
+
     .select-all {
       margin-bottom: 1rem;
       display: flex;
@@ -82,7 +100,13 @@
     }
   </style>
 </head>
+
 <body>
+  <a href="{% url 'tree_equipment_list' %}"
+    style="color:#0D3F31; font-size: 1.5rem; text-decoration: none; margin-left: 1rem;">
+    <i class="fa-solid fa-circle-left"></i> Back
+  </a>
+
   <div class="title">CART</div>
   <form method="POST" action="{% url 'order' %}" id="cartForm">
     {% csrf_token %}
@@ -93,19 +117,23 @@
 
       {% for item in items %}
       <div class="cart-item">
-        <input type="checkbox" class="item-checkbox" name="selected_items" value="{{ item.type }}:{{ item.id }}" data-price="{{ item.price }}" data-qty-id="qty_{{ item.type }}_{{ item.id }}">
+        <input type="checkbox" class="item-checkbox" name="selected_items" value="{{ item.type }}:{{ item.id }}"
+          data-price="{{ item.price }}" data-qty-id="qty_{{ item.type }}_{{ item.id }}">
         <img src="{{ item.image_url }}" alt="{{ item.name }}">
         <div style="flex: 1;">
           <strong>{{ item.name }}</strong><br>
-          Amount: <input type="number" name="quantity_{{ item.type }}_{{ item.id }}" id="qty_{{ item.type }}_{{ item.id }}" value="{{ item.quantity }}" min="1"><br>
+          Amount: <input type="number" name="quantity_{{ item.type }}_{{ item.id }}"
+            id="qty_{{ item.type }}_{{ item.id }}" value="{{ item.quantity }}" min="1"><br>
           Price: {{ item.price }} x {{ item.quantity }}
         </div>
-        <button type="submit" formaction="{% url 'remove_from_cart' item.type item.id %}" class="btn-delete" onclick="return confirm('Are you sure you want to delete this item?')">Delete</button>
+        <button type="submit" formaction="{% url 'remove_from_cart' item.type item.id %}" class="btn-delete"
+          onclick="return confirm('Are you sure you want to delete this item?')">🗑️</button>
       </div>
       {% endfor %}
 
       <div class="bulk-actions">
-        <button type="submit" formaction="{% url 'bulk_remove_from_cart' %}" class="btn-bulk-delete" onclick="return confirm('Remove selected items from cart?')">🗑️ Remove Selected</button>
+        <button type="submit" formaction="{% url 'bulk_remove_from_cart' %}" class="btn-bulk-delete"
+          onclick="return confirm('Remove selected items from cart?')"> Remove all</button>
       </div>
 
       <div class="total-box">
@@ -134,7 +162,7 @@
       el.addEventListener("input", calculateTotal);
     });
 
-    document.getElementById("selectAll").addEventListener("change", function() {
+    document.getElementById("selectAll").addEventListener("change", function () {
       document.querySelectorAll(".item-checkbox").forEach(cb => cb.checked = this.checked);
       calculateTotal();
     });
@@ -143,4 +171,5 @@
     calculateTotal();
   </script>
 </body>
+
 </html>

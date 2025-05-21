@@ -1,14 +1,25 @@
 <!DOCTYPE html>
 <html>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <head>
     <title>Order | PLOOKJING</title>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            background: #0D3F31;
+            background: #f0f9f2;
             color: white;
             font-family: 'Prompt', sans-serif;
+            margin: 0;
+            padding: 2rem;
+        }
+
+        .title {
+            text-align: center;
+            color: #0D3F31;
+            font-size: 2.4rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
         }
 
         .order-box {
@@ -37,9 +48,13 @@
         }
     </style>
 </head>
+<a href="{% url 'tree_equipment_list' %}"
+    style="color:#0D3F31; font-size: 1.5rem; text-decoration: none; margin-left: 1rem;">
+    <i class="fa-solid fa-circle-left"></i> Back
+</a>
 
 <body>
-    <h2 style="color:#FFA552; margin: 1rem;">ORDER</h2>
+    <div class="title">ORDER</div>
     <form method="POST" action="{% url 'confirm_order' %}">
         {% csrf_token %}
         <div class="order-box">

@@ -9,6 +9,7 @@ import qrcode
 from io import BytesIO
 from django.http import HttpResponse
 from django.views.decorators.http import require_POST
+from itertools import zip_longest
 # # from django.shortcuts import get_object_or_404
 # from django.contrib import messages
 
@@ -17,14 +18,14 @@ def getstart(request):
     return render(request, 'getstarted.html')
 
 def home(request):
-    trees = Tree.objects.all()[:3]  # แนะนำ 3 ต้นไม้
-    return render(request, 'home.html', {'trees': trees})
-
-def home(request):
+    trees = Tree.objects.all()[:5]
     notifications = []
     if request.user.is_authenticated:
         notifications = Notification.objects.filter(user=request.user).order_by('-notification_date')[:5]
-    return render(request, 'home.html', {'notifications': notifications})
+    return render(request, 'home.html', {
+        'trees': trees,
+        'notifications': notifications
+    })
 
 # def tree_detail(request, pk):
 #     tree = Tree.objects.get(pk=pk)
