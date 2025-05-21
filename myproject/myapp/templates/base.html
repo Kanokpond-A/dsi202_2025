@@ -1,92 +1,111 @@
-<!-- {% load static %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}PLOOKJING{% endblock %}</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
       font-family: 'Prompt', sans-serif;
-      background-color: #EFFAF3;
+      background-color: #fff;
+      color: #0D3F31;
     }
     .navbar {
+      background-color: #0D3F31;
       display: flex;
       justify-content: space-between;
+      padding: 1.5rem 2rem;
       align-items: center;
-      padding: 1rem 2rem;
-      background-color: #0D3F31;
-      color: white;
     }
     .navbar a {
       color: white;
-      margin-right: 1rem;
       text-decoration: none;
-      font-weight: bold;
+      margin-right: 1.5rem;
+      font-weight: 500;
     }
-    .icon-menu {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      font-size: 1.5rem;
-      cursor: pointer;
-    }
-    #profileMenu {
-      position: absolute;
-      top: 60px;
-      right: 20px;
-      background-color: #5B4332;
-      padding: 1rem;
-      border-radius: 0.5rem;
-      z-index: 100;
-    }
-    #profileMenu a {
-      display: block;
-      margin: 0.5rem 0;
+    i.fa-solid {
+      font-size: 24px;
       color: white;
-      text-decoration: underline;
+      margin: 0 0.5rem;
+      cursor: pointer;
+      transition: transform 0.2s ease;
     }
-    .hidden {
-      display: none;
+    i.fa-solid:hover {
+      transform: scale(1.2);
+      color: #ffc107;
     }
   </style>
+  {% block extra_css %}{% endblock %}
 </head>
-<body>
-  <nav class="navbar">
-    <div>
-      <a href="{% url 'home' %}">Home</a>
-      <a href="{% url 'about' %}">About Us</a>
-      <a href="{% url 'tree_equipment_list' %}">Tree & Equipment</a>
-    </div>
-    <div class="icon-menu">
-      <a href="{% url 'notification' %}"><i class="fa-solid fa-bell"></i></a>
-      <a href="{% url 'cart' %}"><i class="fa-solid fa-cart-shopping"></i></a>
-      <i class="fa-solid fa-user" onclick="toggleProfileMenu()"></i>
-    </div>
-  </nav>
 
-  <div id="profileMenu" class="hidden">
+<body>
+  <!-- Navbar -->
+  <div class="navbar">
+    <div>
+      <a href="/home/">Home</a>
+      <a href="/about/">About Us</a>
+      <a href="/trees-equipment/">Tree & Equipment</a>
+    </div>
+    <div class="icon-bar">
+      <a href="javascript:void(0);" onclick="toggleNotificationMenu()">
+        <i class="fa-solid fa-bell"></i>
+      </a>
+      <a href="{% url 'cart' %}">
+        <i class="fa-solid fa-cart-shopping"></i>
+      </a>
+      <a href="#" onclick="toggleProfileMenu()">
+        <i class="fa-solid fa-user"></i>
+      </a>
+    </div>
+  </div>
+
+  <!-- Profile Dropdown -->
+  <div id="profileMenu" style="display: none; position: fixed; top: 60px; right: 20px; background: #fff; color: black; padding: 1rem; border-radius: 10px; width: 240px; z-index: 999;">
     {% if user.is_authenticated %}
-      <div>Profile: {{ user.email }}</div>
-      <a href="{% url 'logout' %}">Log out</a>
-      <a href="{% url 'order' %}">My Tree</a>
+    <div style="margin-bottom: 1rem;"> {{ user.username }}</div>
+    <a href="{% url 'logout' %}" style="color:black; text-decoration: underline;">Logout</a><br><br>
+    <a href="/mytree/" style="color:black;"> My Tree</a>
     {% else %}
-      <a href="{% url 'signup' %}">Sign up</a>
-      <a href="{% url 'login' %}">Log in</a>
+    <a href="{% url 'account_login' %}" style="color:black;">Log in</a><br><br>
+    <a href="{% url 'account_signup' %}" style="color:black;">Sign up</a>
     {% endif %}
   </div>
 
-  {% block content %}
-  {% endblock %}
+  <!-- Notification Dropdown -->
+  <div id="notificationMenu" style="display: none; position: absolute; right: 20px; top: 60px; background: #fff; color: black;
+      width: 300px; padding: 1rem; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); z-index: 999;">
+    <h4 style="margin-top: 0;">Notifications</h4>
+    <hr style="margin: 0.5rem 0;">
+    {% for n in notifications %}
+    <div style="margin-bottom: 0.8rem;">
+      <strong>{{ n.message }}</strong><br>
+      <small>{{ n.notification_date|date:"d M Y H:i" }}</small>
+    </div>
+    {% empty %}
+    <p>No new notifications</p>
+    {% endfor %}
+  </div>
 
+  <!-- Content Block -->
+  {% block content %}{% endblock %}
+
+  <!-- Scripts -->
   <script>
     function toggleProfileMenu() {
       const menu = document.getElementById("profileMenu");
-      menu.classList.toggle("hidden");
+      menu.style.display = (menu.style.display === "none" || menu.style.display === "") ? "block" : "none";
+    }
+    function toggleNotificationMenu() {
+      const menu = document.getElementById("notificationMenu");
+      menu.style.display = (menu.style.display === "none" || menu.style.display === "") ? "block" : "none";
     }
   </script>
+  {% block extra_js %}{% endblock %}
 </body>
-</html> -->
+
+</html>

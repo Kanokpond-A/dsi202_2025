@@ -214,21 +214,21 @@
     </div>
 
     <!-- WELCOME SECTION -->
-    
-  <section class="welcome-section">
-    <div class="welcome-steps">
-      <p>Plant a dream, one tree at a time.<br>
-        Choose a place, make it yours.<br>
-        With a tap, it begins.<br>
-        Watch it grow, feel it glow —<br>
-        your green story, beautifully alive.</p>
-      <br>
-      <a href="/mytree/" class="hero-btn" style="background:#FFA552; color:white;">MYTREE</a>
-    </div>
-    <div class="welcome-image">
-      <img src="/static/images/photo-1612819386413-1ab650e32510.avif" alt="tree and sunrise">
-    </div>
-  </section>
+
+    <section class="welcome-section">
+        <div class="welcome-steps">
+            <p>Plant a dream, one tree at a time.<br>
+                Choose a place, make it yours.<br>
+                With a tap, it begins.<br>
+                Watch it grow, feel it glow —<br>
+                your green story, beautifully alive.</p>
+            <br>
+            <a href="/mytree/" class="hero-btn" style="background:#FFA552; color:white;">MYTREE</a>
+        </div>
+        <div class="welcome-image">
+            <img src="/static/images/photo-1612819386413-1ab650e32510.avif" alt="tree and sunrise">
+        </div>
+    </section>
 
     <!-- SIGN IN / MY TREE
     <div class="button-section">
@@ -261,8 +261,9 @@
         <!-- <a href="{% url 'notification' %}" style="color:white;"> Notification</a><br><br> -->
         <a href="/mytree/" style="color:black;"> My Tree</a>
         {% else %}
-        <a href="{% url 'login' %}" style="color:black;">Log in</a><br><br>
-        <a href="{% url 'signup' %}" style="color:black;">Sign up</a>
+        <a href="{% url 'account_login' %}" style="color:black;">Log in</a><br><br>
+        <a href="{% url 'account_signup' %}" style="color:black;">Sign up</a>
+
         {% endif %}
     </div>
 

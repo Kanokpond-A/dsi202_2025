@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-    <!-- Font Awesome CDN -->
+<!-- Font Awesome CDN -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <head>
   <meta charset="UTF-8" />
   <title>About Us | PLOOKJING</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
@@ -14,7 +14,7 @@
       font-family: 'Prompt', sans-serif;
       background-color: #0D3F31;
       color: white;
-      
+
     }
 
     .navbar {
@@ -36,18 +36,18 @@
     } */
 
     i.fa-solid {
-            font-size: 24px;
-            color: white;
-            margin: 0 0.5rem;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-        }
+      font-size: 24px;
+      color: white;
+      margin: 0 0.5rem;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
 
-        i.fa-solid:hover {
-            transform: scale(1.2);
-            color: #ffc107;
-            /* ตัวอย่างสี hover */
-        }
+    i.fa-solid:hover {
+      transform: scale(1.2);
+      color: #ffc107;
+      /* ตัวอย่างสี hover */
+    }
 
     .content {
       display: flex;
@@ -57,7 +57,7 @@
       padding: 7rem;
       /* margin-bottom: -5rem;
       margin-top: -3; */
-      
+
     }
 
     .text-box {
@@ -81,7 +81,7 @@
     .image-box {
       flex: 1;
       max-width: 420px;
-      
+
     }
 
     .image-box img {
@@ -120,6 +120,7 @@
     }
   </style>
 </head>
+
 <body>
 
   <div class="navbar">
@@ -129,24 +130,36 @@
       <a href="/trees/">Tree & Equipment</a>
     </div>
     <div class="icon-bar">
-                <a href="javascript:void(0);" onclick="toggleNotificationMenu()">
-                    <i class="fa-solid fa-bell"></i>
-                </a>
-                <a href="{% url 'cart' %}">
-                    <i class="fa-solid fa-cart-shopping"></i>
-                </a>
-                <a href="#" onclick="toggleProfileMenu()">
-                    <i class="fa-solid fa-user"></i>
-                </a>
-            </div>
+      <a href="javascript:void(0);" onclick="toggleNotificationMenu()">
+        <i class="fa-solid fa-bell"></i>
+      </a>
+      <a href="{% url 'cart' %}">
+        <i class="fa-solid fa-cart-shopping"></i>
+      </a>
+      <a href="#" onclick="toggleProfileMenu()">
+        <i class="fa-solid fa-user"></i>
+      </a>
+    </div>
   </div>
 
   <div class="content">
     <div class="text-box">
       <h2>PLANTING IS NOT GIVING BACK. IT'S MOVING FORWARD.</h2>
-      <p>We are a digital platform that empowers individuals to take part in environmental restoration through remote tree planting. Our mission is to make meaningful climate action accessible to everyone—regardless of location—by transforming the way people connect with nature. Through our service, users can choose specific tree species and designate real-world locations for planting, ensuring their contribution aligns with personal values or environmental goals. Once a tree is planted, users receive timely care notifications, such as reminders for watering, fertilizing, or pruning, so they can follow their tree’s growth and development with confidence and peace of mind.</p>
-      <p>We also offer flexible planting plans, allowing users to commit to planting one tree per month or several trees per year. This feature supports long-term green goals while fostering a deeper relationship between people and the planet. In addition, our platform includes an integrated shop where users can purchase real trees and eco-friendly planting equipment, providing a hands-on option for those who wish to grow trees at home or in their communities.</p>
-      <p>Ultimately, our vision is to make sustainability a natural part of everyday life—seamless, rewarding, and personal. By combining technology, environmental awareness, and community involvement, we aim to create a greener world that starts with you.</p>
+      <p>We are a digital platform that empowers individuals to take part in environmental restoration through remote
+        tree planting. Our mission is to make meaningful climate action accessible to everyone—regardless of location—by
+        transforming the way people connect with nature. Through our service, users can choose specific tree species and
+        designate real-world locations for planting, ensuring their contribution aligns with personal values or
+        environmental goals. Once a tree is planted, users receive timely care notifications, such as reminders for
+        watering, fertilizing, or pruning, so they can follow their tree’s growth and development with confidence and
+        peace of mind.</p>
+      <p>We also offer flexible planting plans, allowing users to commit to planting one tree per month or several trees
+        per year. This feature supports long-term green goals while fostering a deeper relationship between people and
+        the planet. In addition, our platform includes an integrated shop where users can purchase real trees and
+        eco-friendly planting equipment, providing a hands-on option for those who wish to grow trees at home or in
+        their communities.</p>
+      <p>Ultimately, our vision is to make sustainability a natural part of everyday life—seamless, rewarding, and
+        personal. By combining technology, environmental awareness, and community involvement, we aim to create a
+        greener world that starts with you.</p>
     </div>
     <div class="image-box">
       <img src="/static/images/georg-eiermann-y1wJs5Ot7Ns-unsplash.jpg" alt="Hoh Rain Forest by Georg Eiermann">
@@ -160,48 +173,49 @@
   </div>
 
   <!-- PROFILE MENU DROPDOWN -->
-    <div id="profileMenu"
-        style="display: none; position: fixed; top: 60px; right: 20px; background: #fff; color: black; padding: 1rem; border-radius: 10px; width: 240px; z-index: 999;">
-        {% if user.is_authenticated %}
-        <div style="margin-bottom: 1rem;"> {{ user.username }}</div>
-        <a href="{% url 'logout' %}" style="color:black; text-decoration: underline;">Logout</a><br><br>
-        <!-- <a href="{% url 'notification' %}" style="color:white;"> Notification</a><br><br> -->
-        <a href="/mytree/" style="color:black;"> My Tree</a>
-        {% else %}
-        <a href="{% url 'login' %}" style="color:black;">Log in</a><br><br>
-        <a href="{% url 'signup' %}" style="color:black;">Sign up</a>
-        {% endif %}
-    </div>
+  <div id="profileMenu"
+    style="display: none; position: fixed; top: 60px; right: 20px; background: #fff; color: black; padding: 1rem; border-radius: 10px; width: 240px; z-index: 999;">
+    {% if user.is_authenticated %}
+    <div style="margin-bottom: 1rem;"> {{ user.username }}</div>
+    <a href="{% url 'logout' %}" style="color:black; text-decoration: underline;">Logout</a><br><br>
+    <!-- <a href="{% url 'notification' %}" style="color:white;"> Notification</a><br><br> -->
+    <a href="/mytree/" style="color:black;"> My Tree</a>
+    {% else %}
+    <a href="{% url 'account_login' %}" style="color:black;">Log in</a><br><br>
+    <a href="{% url 'account_signup' %}" style="color:black;">Sign up</a>
 
-    <div id="notificationMenu" style="display: none; position: absolute; right: 20px; top: 60px; background: #fff; color: black;
+    {% endif %}
+  </div>
+
+  <div id="notificationMenu" style="display: none; position: absolute; right: 20px; top: 60px; background: #fff; color: black;
             width: 300px; padding: 1rem; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); z-index: 999;">
 
-        <h4 style="margin-top: 0;">Notifications</h4>
-        <hr style="margin: 0.5rem 0;">
+    <h4 style="margin-top: 0;">Notifications</h4>
+    <hr style="margin: 0.5rem 0;">
 
-        {% for n in notifications %}
-        <div style="margin-bottom: 0.8rem;">
-            <strong>{{ n.message }}</strong><br>
-            <small>{{ n.notification_date|date:"d M Y H:i" }}</small>
-        </div>
-        {% empty %}
-        <p>No new notifications</p>
-        {% endfor %}
+    {% for n in notifications %}
+    <div style="margin-bottom: 0.8rem;">
+      <strong>{{ n.message }}</strong><br>
+      <small>{{ n.notification_date|date:"d M Y H:i" }}</small>
     </div>
+    {% empty %}
+    <p>No new notifications</p>
+    {% endfor %}
+  </div>
 
 </body>
 <script>
-    function toggleProfileMenu() {
-        const menu = document.getElementById("profileMenu");
-        menu.style.display = (menu.style.display === "none" || menu.style.display === "") ? "block" : "none";
-    }
+  function toggleProfileMenu() {
+    const menu = document.getElementById("profileMenu");
+    menu.style.display = (menu.style.display === "none" || menu.style.display === "") ? "block" : "none";
+  }
 </script>
 
 <script>
-    function toggleNotificationMenu() {
-        const menu = document.getElementById("notificationMenu");
-        menu.style.display = (menu.style.display === "none" || menu.style.display === "") ? "block" : "none";
-    }
+  function toggleNotificationMenu() {
+    const menu = document.getElementById("notificationMenu");
+    menu.style.display = (menu.style.display === "none" || menu.style.display === "") ? "block" : "none";
+  }
 </script>
 
 </html>

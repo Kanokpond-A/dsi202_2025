@@ -247,8 +247,8 @@
         <a href="{% url 'logout' %}" style="color:black; text-decoration: underline;">Logout</a><br><br>
         <a href="/mytree/" style="color:black;"> My Tree</a>
         {% else %}
-        <a href="{% url 'login' %}" style="color:black;">Log in</a><br><br>
-        <a href="{% url 'signup' %}" style="color:black;">Sign up</a>
+        <a href="{% url 'account_login' %}" style="color:black;">Log in</a><br><br>
+        <a href="{% url 'account_signup' %}" style="color:black;">Sign up</a>
         {% endif %}
     </div>
 
