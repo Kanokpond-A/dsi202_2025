@@ -155,10 +155,9 @@ def order(request):
 def confirm_selected_order(request):
     if request.method == 'POST':
         selected_raw = request.POST.getlist('selected_items')
-        location_id = request.POST.get('location_id')
-        location = PlantingLocation.objects.get(id=location_id)
-
         items = []
+        total_price = 0
+
         for sel in selected_raw:
             item_type, item_id = sel.split(':')
             item_id = int(item_id)
@@ -167,21 +166,38 @@ def confirm_selected_order(request):
             model = Tree if item_type == 'tree' else Equipment
             obj = model.objects.get(id=item_id)
 
+            item_total = obj.price * quantity
+            total_price += item_total
+
             items.append({
                 'item_type': item_type,
                 'item_id': item_id,
                 'name': obj.name,
                 'price': obj.price,
-                'quantity': quantity
+                'quantity': quantity,
+                'image_url': obj.image_url,
             })
 
-        # สร้าง Purchase หลัก
-        purchase = Purchase.objects.create(
-            user=request.user,
-            location=location
-        )
+        # ตรวจสอบว่าเป็น tree หรือ equipment
+        is_tree = any(item['item_type'] == 'tree' for item in items)
 
-        # บันทึก OrderItem
+        if is_tree:
+            location = PlantingLocation.objects.get(id=request.POST.get('location_id'))
+            purchase = Purchase.objects.create(
+                user=request.user,
+                location=location,
+                total_price=total_price
+            )
+        else:
+            address = request.POST.get('address')
+            tel = request.POST.get('tel')
+            purchase = Purchase.objects.create(
+                user=request.user,
+                address=address,
+                tel=tel,
+                total_price=total_price
+            )
+
         for item in items:
             OrderItem.objects.create(
                 purchase=purchase,
@@ -190,13 +206,14 @@ def confirm_selected_order(request):
                 name=item['name'],
                 price=item['price'],
                 quantity=item['quantity'],
-                image_url=obj.image_url
+                image_url=item['image_url']
             )
 
         request.session['order_id'] = purchase.id
         return redirect('payment')
-    
+
     return redirect('cart')
+
 
 
 def tree_list(request):
@@ -246,12 +263,10 @@ def confirm_order(request, item_type=None, item_id=None):
     if request.method != 'POST':
         return redirect('cart')
 
-    location_id = request.POST.get('location_id')
-    location = PlantingLocation.objects.get(id=location_id)
     items = []
     total_price = 0
 
-    # ✅ CASE 1: จาก Buy Now (item_type และ item_id ถูกส่งมา)
+    # ✅ Buy Now
     if item_type and item_id:
         quantity = int(request.POST.get('quantity', 1))
         model = Tree if item_type == 'tree' else Equipment
@@ -265,10 +280,11 @@ def confirm_order(request, item_type=None, item_id=None):
             'item_id': item_id,
             'name': obj.name,
             'price': obj.price,
-            'quantity': quantity
+            'quantity': quantity,
+            'image_url': obj.image_url,
         })
 
-    # ✅ CASE 2: จาก cart (เลือกหลายชิ้น)
+    # ✅ Cart
     else:
         selected_raw = request.POST.getlist('selected_items')
         for sel in selected_raw:
@@ -287,17 +303,30 @@ def confirm_order(request, item_type=None, item_id=None):
                 'item_id': item_id,
                 'name': obj.name,
                 'price': obj.price,
-                'quantity': quantity
+                'quantity': quantity,
+                'image_url': obj.image_url,
             })
 
-    # ✅ สร้างออเดอร์หลัก
-    purchase = Purchase.objects.create(
-        user=request.user,
-        location=location,
-        total_price=total_price
-    )
+    # ✅ แยกกรณี Tree กับ Equipment
+    is_tree = any(item['item_type'] == 'tree' for item in items)
 
-    # ✅ บันทึกรายการย่อย
+    if is_tree:
+        location = PlantingLocation.objects.get(id=request.POST.get('location_id'))
+        purchase = Purchase.objects.create(
+            user=request.user,
+            location=location,
+            total_price=total_price
+        )
+    else:
+        address = request.POST.get('address')
+        tel = request.POST.get('tel')
+        purchase = Purchase.objects.create(
+            user=request.user,
+            address=address,
+            tel=tel,
+            total_price=total_price
+        )
+
     for item in items:
         OrderItem.objects.create(
             purchase=purchase,
@@ -306,11 +335,12 @@ def confirm_order(request, item_type=None, item_id=None):
             name=item['name'],
             price=item['price'],
             quantity=item['quantity'],
-            image_url=obj.image_url 
+            image_url=item['image_url']
         )
 
     request.session['order_id'] = purchase.id
     return redirect('payment')
+
 
 
 def payment(request):

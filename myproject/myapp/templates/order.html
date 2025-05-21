@@ -30,6 +30,15 @@
             border-radius: 20px;
         }
 
+        .order-item {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 1rem;
+    }
+
         .order-img {
             width: 150px;
             height: 150px;
@@ -37,54 +46,97 @@
             border-radius: 10px;
         }
 
-        .btn-confirm {
-            background: #FFA552;
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: 20px;
-            font-weight: bold;
-            border: none;
-            cursor: pointer;
-        }
+        .form-group {
+      margin-top: 1rem;
+    }
+
+    .form-group label {
+      font-weight: bold;
+    }
+
+    .form-group textarea,
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 0.7rem;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+      border: 1px solid #ccc;
+      font-family: 'Prompt', sans-serif;
+    }
+
+         .btn-confirm {
+      margin-top: 1.5rem;
+      background: #FFA552;
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 20px;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+    }
+
+    .back-link {
+      color: #0D3F31;
+      font-size: 1.5rem;
+      text-decoration: none;
+      margin-left: 1rem;
+      display: inline-block;
+      margin-bottom: 1rem;
+    }
     </style>
 </head>
-<a href="{% url 'tree_equipment_list' %}"
-    style="color:#0D3F31; font-size: 1.5rem; text-decoration: none; margin-left: 1rem;">
-    <i class="fa-solid fa-circle-left"></i> Back
-</a>
+
 
 <body>
-    <div class="title">ORDER</div>
-    <form method="POST" action="{% url 'confirm_order' %}">
-        {% csrf_token %}
-        <div class="order-box">
-            {% for item in items %}
-            <div style="display:flex; gap:2rem; align-items:center;">
-                <img class="order-img" src="{{ item.image_url }}">
-                <div>
-                    <p>{{ item.name }}</p>
-                    <p>Amount: {{ item.quantity }}</p>
-                    <p>Price: {{ item.price }}</p>
-                </div>
-            </div>
-            <form method="POST" action="{% url 'confirm_selected_order' %}">
-                <input type="hidden" name="selected_items" value="{{ item.type }}:{{ item.id }}">
-                <input type="hidden" name="quantity_{{ item.type }}_{{ item.id }}" value="{{ item.quantity }}">
-            </form>
+  <a href="{% url 'cart' %}" class="back-link"><i class="fa-solid fa-circle-left"></i> Back</a>
 
-            {% endfor %}
+  <div class="title">ORDER</div>
 
-            <label for="location">Location:</label>
-            <select name="location_id" id="location" class="border p-2 rounded" required>
-                {% for location in locations %}
-                <option value="{{ location.id }}">{{ location.name }}</option>
-                {% endfor %}
-            </select>
+  <form method="POST" action="{% url 'confirm_order' %}">
+    {% csrf_token %}
+    <div class="order-box">
 
-            <button type="submit" class="btn-confirm">Confirm Order</button>
+      <!-- รายการสินค้า -->
+      {% for item in items %}
+      <div class="order-item">
+        <img class="order-img" src="{{ item.image_url }}" alt="{{ item.name }}">
+        <div>
+          <p><strong>{{ item.name }}</strong></p>
+          <p>Amount: {{ item.quantity }}</p>
+          <p>Price: {{ item.price }} THB</p>
         </div>
-    </form>
+      </div>
+      <input type="hidden" name="selected_items" value="{{ item.type }}:{{ item.id }}">
+      <input type="hidden" name="quantity_{{ item.type }}_{{ item.id }}" value="{{ item.quantity }}">
+      {% endfor %}
 
+      <!-- กรณี tree -->
+      {% if items.0.type == 'tree' %}
+      <div class="form-group">
+        <label for="location_id">Location:</label>
+        <select name="location_id" id="location_id" required>
+          {% for location in locations %}
+          <option value="{{ location.id }}">{{ location.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- กรณี equipment -->
+      {% else %}
+      <div class="form-group">
+        <label for="address">Shipping Address:</label>
+        <textarea name="address" id="address" rows="3" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="tel">Phone Number:</label>
+        <input type="text" name="tel" id="tel" required>
+      </div>
+      {% endif %}
+
+      <button type="submit" class="btn-confirm">Confirm Order</button>
+    </div>
+  </form>
 
 </body>
 
