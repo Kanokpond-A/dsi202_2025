@@ -9,6 +9,9 @@ import qrcode
 from io import BytesIO
 from django.http import HttpResponse
 from django.views.decorators.http import require_POST
+from django.shortcuts import get_object_or_404
+from django.contrib import messages
+
 
 def getstart(request):
     return render(request, 'getstarted.html')
@@ -75,36 +78,107 @@ def cart(request):
         'total': total_price,
     })
 
+# @csrf_exempt
+# def order(request):
+#     if request.method == "POST":
+#         selected_raw = request.POST.getlist('selected_items')  # ['tree:2', 'equipment:4', ...]
+#         selected_items = []
+#         for sel in selected_raw:
+#             item_type, item_id = sel.split(":")
+#             item_id = int(item_id)
+#             quantity = int(request.POST.get(f'quantity_{item_type}_{item_id}', 1))
+
+#             model = Tree if item_type == 'tree' else Equipment
+#             obj = model.objects.get(id=item_id)
+
+#             selected_items.append({
+#                 'type': item_type,
+#                 'id': item_id,
+#                 'name': obj.name,
+#                 'image_url': obj.image_url,
+#                 'price': float(obj.price),
+#                 'quantity': quantity,
+#             })
+
+#         request.session['selected_items'] = selected_items
+#         locations = PlantingLocation.objects.all()
+#         return render(request, 'order.html', {
+#             'items': selected_items,
+#             'locations': locations
+#         })
+
+#     return redirect('cart')
+
+@csrf_exempt
+def buy_now(request, item_type, item_id):
+    if request.method == 'POST':
+        quantity = int(request.POST.get('quantity', 1))
+        model = Tree if item_type == 'tree' else Equipment
+        obj = model.objects.get(id=item_id)
+
+        request.session['selected_items'] = [{
+            'type': item_type,
+            'id': obj.id,
+            'name': obj.name,
+            'image_url': obj.image_url,
+            'price': float(obj.price),
+            'quantity': quantity
+        }]
+        return redirect('order')
+    return redirect('trees_equipment_list')
+
+
 @csrf_exempt
 def order(request):
     if request.method == "POST":
-        selected_raw = request.POST.getlist('selected_items')  # ['tree:2', 'equipment:4', ...]
+        selected_raw = request.POST.getlist('selected_items')  # ['tree:2', 'equipment:4']
         selected_items = []
+
         for sel in selected_raw:
-            item_type, item_id = sel.split(":")
-            item_id = int(item_id)
-            quantity = int(request.POST.get(f'quantity_{item_type}_{item_id}', 1))
+            try:
+                item_type, item_id = sel.split(":")
+                item_id = int(item_id)
+                quantity = int(request.POST.get(f'quantity_{item_type}_{item_id}', 1))
 
-            model = Tree if item_type == 'tree' else Equipment
-            obj = model.objects.get(id=item_id)
+                if item_type == 'tree':
+                    obj = Tree.objects.get(id=item_id)
+                elif item_type == 'equipment':
+                    obj = Equipment.objects.get(id=item_id)
+                else:
+                    continue  # skip invalid type
 
-            selected_items.append({
-                'type': item_type,
-                'id': item_id,
-                'name': obj.name,
-                'image_url': obj.image_url,
-                'price': float(obj.price),
-                'quantity': quantity,
-            })
+                selected_items.append({
+                    'type': item_type,
+                    'id': item_id,
+                    'name': obj.name,
+                    'image_url': obj.image_url,
+                    'price': float(obj.price),
+                    'quantity': quantity,
+                })
+            except (ValueError, Tree.DoesNotExist, Equipment.DoesNotExist):
+                continue  # skip any malformed input
 
+        # เก็บรายการที่เลือกไว้ใน session
         request.session['selected_items'] = selected_items
+
+        # ดึง location สำหรับ dropdown
         locations = PlantingLocation.objects.all()
+
         return render(request, 'order.html', {
             'items': selected_items,
             'locations': locations
         })
 
-    return redirect('cart')
+    # ถ้ามาแบบ GET
+    selected_items = request.session.get('selected_items', [])
+    if not selected_items:
+        return redirect('cart')
+    
+    locations = PlantingLocation.objects.all()
+    return render(request, 'order.html', {
+        'items': selected_items,
+        'locations': locations
+    })
 
 
 def confirm_selected_order(request):
@@ -151,9 +225,6 @@ def confirm_selected_order(request):
         return redirect('payment')
     
     return redirect('cart')
-
-
-
 
 
 def tree_list(request):

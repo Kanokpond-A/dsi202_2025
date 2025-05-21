@@ -52,8 +52,11 @@
                     <p>Price: {{ item.price }}</p>
                 </div>
             </div>
-            <input type="hidden" name="selected_items" value="{{ item.type }}:{{ item.id }}">
-            <input type="hidden" name="quantity_{{ item.type }}_{{ item.id }}" value="{{ item.quantity }}">
+            <form method="POST" action="{% url 'confirm_selected_order' %}">
+                <input type="hidden" name="selected_items" value="{{ item.type }}:{{ item.id }}">
+                <input type="hidden" name="quantity_{{ item.type }}_{{ item.id }}" value="{{ item.quantity }}">
+            </form>
+
             {% endfor %}
 
             <label for="location">Location:</label>
