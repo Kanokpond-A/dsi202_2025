@@ -143,6 +143,7 @@ Follow these steps to run the project locally:
 ```bash
 git clone https://github.com/yourusername/plookjing.git
 cd plookjing
+```
 
 ---
 
@@ -152,6 +153,7 @@ cd plookjing
 python -m venv env
 source env/bin/activate  # On Windows: env\Scripts\activate
 pip install -r requirements.txt
+```
 
 ---
 
@@ -159,6 +161,7 @@ pip install -r requirements.txt
 
 ```bash
 python manage.py migrate
+```
 
 ---
 
@@ -166,6 +169,7 @@ python manage.py migrate
 
 ```bash
 python manage.py createsuperuser
+```
 
 ---
 
@@ -173,6 +177,7 @@ python manage.py createsuperuser
 
 ```bash
 python manage.py runserver
+```
 
 ---
 
@@ -180,5 +185,6 @@ Once running, visit:
 
 ```bash
 http://localhost:8000
+```
 
 ---
