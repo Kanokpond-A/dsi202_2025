@@ -142,6 +142,25 @@
             text-decoration: underline;
         }
 
+        .add-cart-btn {
+            display: inline-block;
+            padding: 0.6rem 1.2rem;
+            font-weight: bold;
+            border-radius: 25px;
+            background-color: #165a26;
+            color: white;
+            text-decoration: none;
+            transition: background-color 0.2s ease, transform 0.15s ease;
+            margin-top: 0.4rem;
+            font-size: 0.9rem;
+        }
+
+        .add-cart-btn:hover {
+            background-color: #0d3f31;
+            transform: scale(1.03);
+        }
+
+
         @media (max-width: 768px) {
             .search-bar input {
                 width: 90%;
@@ -162,13 +181,14 @@
             <a href="/trees-equipment/">Tree & Equipment</a>
         </div>
         <div class="icon-bar">
-            <a href="javascript:void(0);" onclick="toggleNotificationMenu()">
+            <a href="javascript:void(0);" onclick="toggleMenu('notificationMenu')">
                 <i class="fa-solid fa-bell"></i>
             </a>
             <a href="{% url 'cart' %}">
                 <i class="fa-solid fa-cart-shopping"></i>
             </a>
-            <a href="#" onclick="toggleProfileMenu()">
+
+            <a href="javascript:void(0);" onclick="toggleMenu('profileMenu')">
                 <i class="fa-solid fa-user"></i>
             </a>
         </div>
@@ -239,32 +259,7 @@
         {% endfor %}
     </div>
 
-    <!-- PROFILE MENU DROPDOWN -->
-    <div id="profileMenu"
-        style="display: none; position: fixed; top: 60px; right: 20px; background: #fff; color: black; padding: 1rem; border-radius: 10px; width: 240px; z-index: 999;">
-        {% if user.is_authenticated %}
-        <div style="margin-bottom: 1rem;"> {{ user.username }}</div>
-        <a href="{% url 'logout' %}" style="color:black; text-decoration: underline;">Logout</a><br><br>
-        <a href="/mytree/" style="color:black;"> My Tree</a>
-        {% else %}
-        <a href="{% url 'account_login' %}" style="color:black;">Log in</a><br><br>
-        <a href="{% url 'account_signup' %}" style="color:black;">Sign up</a>
-        {% endif %}
-    </div>
 
-    <div id="notificationMenu"
-        style="display: none; position: absolute; right: 20px; top: 60px; background: #fff; color: black; width: 300px; padding: 1rem; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); z-index: 999;">
-        <h4 style="margin-top: 0;">Notifications</h4>
-        <hr style="margin: 0.5rem 0;">
-        {% for n in notifications %}
-        <div style="margin-bottom: 0.8rem;">
-            <strong>{{ n.message }}</strong><br>
-            <small>{{ n.notification_date|date:"d M Y H:i" }}</small>
-        </div>
-        {% empty %}
-        <p>No new notifications</p>
-        {% endfor %}
-    </div>
     <!-- Popup Modal -->
     <div id="popup"
         style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background-color:rgba(0,0,0,0.5); z-index:999; justify-content:center; align-items:center;">
@@ -275,19 +270,88 @@
         </div>
     </div>
 
+    <!-- PROFILE MENU DROPDOWN -->
+    <div id="profileMenu"
+        style="display: none; position: absolute; top: 70px; right: 20px; background: white;
+           color: #165a26; padding: 1rem 1.5rem; border-radius: 1rem; width: 220px;
+           box-shadow: 0 8px 20px rgba(0,0,0,0.15); z-index: 999; font-family: 'Prompt', sans-serif; animation: fadeIn 0.3s ease;">
+        {% if user.is_authenticated %}
+        <div style="font-weight: bold; margin-bottom: 0.8rem;">💚 {{ user.username }}</div>
+        <a href="{% url 'logout' %}"
+            style="display:block; padding: 0.4rem 0; color: #E53935; text-decoration: none; font-weight: 500;">
+            Logout
+        </a>
+        <a href="/mytree/" style="display:block; padding: 0.4rem 0; color: #165a26; text-decoration: none;">
+            🌲 My Tree 🌲
+        </a>
+        {% else %}
+        <a href="{% url 'account_login' %}"
+            style="display:block; padding: 0.4rem 0; color: #165a26; text-decoration: none; font-weight: 500;">
+            Log in
+        </a>
+        <a href="{% url 'account_signup' %}"
+            style="display:block; padding: 0.4rem 0; color: #165a26; text-decoration: none;">
+            Sign up
+        </a>
+        {% endif %}
+    </div>
+
+
+    <div id="notificationMenu"
+        style="display: none; position: absolute; top: 70px; right: 20px; background: white;
+            color: #165a26; padding: 1.2rem 1.5rem; border-radius: 1rem; width: 300px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15); z-index: 999; font-family: 'Prompt', sans-serif; animation: fadeIn 0.3s ease;">
+
+        <h4 style="margin: 0; font-size: 1.2rem; font-weight: 600; color: #0D3F31;"> Notifications</h4>
+        <hr style="margin: 0.8rem 0; border-color: #cfd8dc;">
+
+        {% for n in notifications %}
+        <div style="margin-bottom: 1rem; padding-bottom: 0.8rem; border-bottom: 1px solid #eee;">
+            <strong style="display: block; font-size: 0.95rem;">{{ n.message }}</strong>
+            <small style="color: #999;"> {{ n.notification_date|date:"d M Y H:i" }}</small>
+        </div>
+        {% empty %}
+        <p style="color: #999; font-size: 0.9rem;">No new notifications</p>
+        {% endfor %}
+    </div>
+
     <script>
-        function toggleProfileMenu() {
-            const menu = document.getElementById("profileMenu");
-            menu.style.display = (menu.style.display === "none" || menu.style.display === "") ? "block" : "none";
-        }
-        function toggleNotificationMenu() {
-            const menu = document.getElementById("notificationMenu");
-            menu.style.display = (menu.style.display === "none" || menu.style.display === "") ? "block" : "none";
-        }
+        // function toggleProfileMenu() {
+        //     const menu = document.getElementById("profileMenu");
+        //     menu.style.display = (menu.style.display === "none" || menu.style.display === "") ? "block" : "none";
+        // }
+        // function toggleNotificationMenu() {
+        //     const menu = document.getElementById("notificationMenu");
+        //     menu.style.display = (menu.style.display === "none" || menu.style.display === "") ? "block" : "none";
+        // }
         function showPopup(content) {
             document.getElementById('popup-content').innerText = content;
             document.getElementById('popup').style.display = 'flex';
         }
+    </script>
+
+    <script>
+        function toggleMenu(id) {
+            const menu = document.getElementById(id);
+            menu.style.display = (menu.style.display === "none" || menu.style.display === "") ? "block" : "none";
+        }
+
+        document.addEventListener('click', function (event) {
+            const profileMenu = document.getElementById('profileMenu');
+            const profileIcon = document.querySelector('.fa-user');
+            const notificationMenu = document.getElementById('notificationMenu');
+            const bellIcon = document.querySelector('.fa-bell');
+
+            // ซ่อน profile ถ้าคลิกนอก
+            if (profileMenu && !profileMenu.contains(event.target) && !profileIcon.contains(event.target)) {
+                profileMenu.style.display = 'none';
+            }
+
+            // ซ่อน notification ถ้าคลิกนอก
+            if (notificationMenu && !notificationMenu.contains(event.target) && !bellIcon.contains(event.target)) {
+                notificationMenu.style.display = 'none';
+            }
+        });
     </script>
 </body>
 
