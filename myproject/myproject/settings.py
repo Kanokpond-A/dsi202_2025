@@ -155,5 +155,5 @@ ACCOUNT_LOGIN_METHODS = {'email', 'username'}
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
 ACCOUNT_EMAIL_VERIFICATION = "none"  # ถ้าต้องการ skip verify
 LOGIN_REDIRECT_URL = "/home/"
-LOGOUT_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = " "
 
