@@ -144,6 +144,8 @@ Follow these steps to run the project locally:
 git clone https://github.com/yourusername/plookjing.git
 cd plookjing
 
+---
+
 ### 2. Set Up the Virtual Environment
 
 ```bash
@@ -151,20 +153,28 @@ python -m venv env
 source env/bin/activate  # On Windows: env\Scripts\activate
 pip install -r requirements.txt
 
+---
+
 ### 3. Run Migrations
 
 ```bash
 python manage.py migrate
+
+---
 
 ### 4. Create Superuser
 
 ```bash
 python manage.py createsuperuser
 
+---
+
 ### 5. Launch the Server
 
 ```bash
 python manage.py runserver
+
+---
 
 Once running, visit:
 
