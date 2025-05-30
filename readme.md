@@ -142,7 +142,6 @@ Follow these steps to run the project locally:
 
 ```bash
 git clone https://github.com/Kanokpond-A/dsi202_2025
-cd plookjing
 ```
 
 ---
